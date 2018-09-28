@@ -19,46 +19,21 @@ public class L25ReverseNodesinkGroup {
 		head.next.next.next.next = new ListNode(5);
 		head.next.next.next.next.next = new ListNode(6);
 		head.next.next.next.next.next.next = new ListNode(7);
-		//		
-		//		ListNode tmp2 = reverseLinked(head.next,head.next.next.next.next);
-		//        System.out.println(tmp2.toString());
-
-		//		ListNode tmp = reverseKGroup(head, 3);
-		//		System.out.println(tmp);
+//		ListNode tmp = reverseKGroup(head, 2);
+		ListNode[] tmp1 =  reverseKGroupHelper(head, 3);
+		System.out.println(tmp1);
 	}
 
-	public ListNode[] reverseKGroupHelper(ListNode head, int limitk) {
-		ListNode pre = head;
-		ListNode result = head;
-		ListNode next = null;
-		int count = 1;
 
-		while (result.next != null && count < limitk) {
-			next = result.next;
-			result.next = next.next;
 
-			next.next = pre;
-			pre = next;
-			++count;
-		}
-
-		return new ListNode[] { pre, result };
-	}
-
-	public ListNode reverseKGroup(ListNode head, int k) {
-		ListNode result = head;
-		int count = 0;
+	public static ListNode reverseKGroup(ListNode head, int k) {
+		
 		ListNode returnVal = null;
 		ListNode prevToSet = null;
-		while (result != null) {
-			result = result.next;
-			++count;
-		}
-		
-		if (k > count)
-			return head;
+		int count = count(head);
+		if (k > count) return head;
 
-		result = head;
+		ListNode result = head;
 		while (result != null && count >= k) {
 			ListNode[] tmp = reverseKGroupHelper(result, k);
 			result = tmp[1].next;
@@ -75,6 +50,53 @@ public class L25ReverseNodesinkGroup {
 		}
 
 		return returnVal;
+	}
+
+
+
+	/**
+	 * @param head
+	 * @param count
+	 * @return
+	 */
+	private static int count(ListNode head) {
+		int count = 0;
+		ListNode result = head;
+		while (result != null) {
+			result = result.next;
+			++count;
+		}
+		return count;
+	}
+	
+	/**
+	 * 一段的反转的过程，具体的逻辑可以描述为：把元素轮流的插入链表的头部
+	 * */
+	public static ListNode[] reverseKGroupHelper(ListNode head, int limitk) {
+		ListNode pre = head;
+		ListNode current = head;
+		//当前元素的下一个元素
+		ListNode next = null;
+		int count = 1;
+		while (current.next != null && count < limitk) {
+			//下一个元素
+			next = current.next;
+			//把当前元素的下一个元素指向下一个元素的next，相当于是跳过了next所指向的元素
+			current.next = next.next;
+			//然后把next指向的元素的下一个元素设置为前一个元素，完成把头元素的后面的元素挪到前面的位置
+			next.next = pre;
+			pre = next;
+			++count;
+		}
+		return new ListNode[] { pre, current };
+	}
+	
+	public static ListNode reverseHeadAfterToHead(ListNode head, int limitk) {
+		ListNode pre = head;
+		ListNode next = head.next;
+		head.next = next.next;
+		pre.next = head;
+		return pre;
 	}
 
 	/**
