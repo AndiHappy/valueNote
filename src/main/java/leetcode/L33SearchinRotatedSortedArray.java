@@ -31,7 +31,13 @@ public class L33SearchinRotatedSortedArray {
 	/**
 	 * 错误的想法，导致错误的编程
 	 * error：打算直接的根据这样的队列，采用二分查找。
+	 * 
 	 * right：二分查找的前提是，有序数据。既然数据不是有序的，是扭曲的。考虑的应该是怎么"扭曲"回来.
+	 * 仔细的分析这个数据：4, 5, 6, 7, 0, 1, 2
+	 * 其实我们可以通过怎么样的操作，把4，5，6，7 按照某种形式给挪到 0，1，2 后面去，这个时候想起来队列里面
+	 * 在入队的时候的操作，有界的队列，怎么保证最大限度的时候的使用空间，就是把队列看成一个环，采用(i%queuellength)计算队列的下标
+	 * 这样就能够把数据看成是一个有序的队列
+	 * 
 	 * */
 	public static void main(String[] args) {
 		int[] nums = new int[] { 4, 5, 6, 7, 0, 1, 2 };
@@ -73,6 +79,7 @@ public class L33SearchinRotatedSortedArray {
 			else
 				hi = mid;
 		}
+		
 		// lo==hi is the index of the smallest value and also the number of places rotated.
 		int rot = lo;
 		lo = 0;
@@ -80,6 +87,7 @@ public class L33SearchinRotatedSortedArray {
 		// The usual binary search and accounting for rotation.
 		while (lo <= hi) {
 			int mid = (lo + hi) / 2;
+			//最关键的一句，说明了，这个题目看数据的方式
 			int realmid = (mid + rot) % n;
 			if (A[realmid] == target)
 				return realmid;
