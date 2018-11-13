@@ -26,12 +26,31 @@ public class L35SearchInsertPosition {
 	Output: 0
 	 * */
 
-	public int searchInsert(int[] nums, int target) {
-		return 0;
+	public static int searchInsert(int[] nums, int target) {
+		int from = 0;int end = nums.length-1;
+		int mid = (from+end)/2;
+		while(from <= end){
+			if(nums[mid] == target){
+				return mid;
+			}
+			
+			if(nums[mid] < target){
+				from=mid+1;
+			}
+			
+			if(nums[mid] > target){
+				end=mid-1;
+			}
+			mid = (from+end)/2;
+		}
+		return from;
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		System.out.println(searchInsert(new int[]{1,3,5,6}, 5));
+		System.out.println(searchInsert(new int[]{1,3,5,6}, 2));
+		System.out.println(searchInsert(new int[]{1,3,5,6}, 7));
+		System.out.println(searchInsert(new int[]{1,3,5,6}, 0));
 
 	}
 
