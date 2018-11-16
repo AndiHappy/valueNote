@@ -85,7 +85,11 @@ public class Rat_in_a_Maze {
 	}
 
 	public static void main(String[] args) {
-		int[][] array = new int[][] { { 1, 0, 1, 1 }, { 1, 1, 1, 1 }, { 0, 1, 0, 0 }, { 1, 1, 1, 1 } };
+		int[][] array = new int[][] { 
+			{ 1, 0, 1, 1 }, 
+			{ 1, 1, 1, 1 }, 
+			{ 0, 1, 0, 0 }, 
+			{ 1, 1, 1, 1 } };
 		int[][] array1 = new int[][] { { 1, 1, 1, 1 }, { 1, 1, 1, 1 }, { 1, 1, 1, 1}, { 1, 1, 1, 1 } };
 
 		solveMaze(array1);
