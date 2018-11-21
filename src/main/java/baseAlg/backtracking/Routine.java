@@ -11,7 +11,7 @@ public class Routine {
 	}
 	
 	private void alg(String[] strings ,int i, int j) {
-		for (int j2 = 0; j2 < j && i < j; j2++) {
+		for (int j2 = i; j2 < j && i < j; j2++) {
 			String string = strings[j2];
 			System.out.print(" "+ string);
 			alg(strings, i+1, j);

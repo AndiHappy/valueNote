@@ -28,20 +28,18 @@ Note: Each term of the sequence of integers will be represented as a string.
 	public static void main(String[] args){
 		System.out.println("1");
 		System.out.println("11");
-		System.out.println(countAndSay(3)); System.out.print("##21");System.out.println();
-		System.out.println(countAndSay(4));System.out.print("##1211");System.out.println();
-		System.out.println(countAndSay(5));System.out.print("##111221");System.out.println();
-		System.out.println(countAndSay(6));System.out.print("##312211");System.out.println();
-		System.out.println(countAndSay(7));System.out.print("##13112221");System.out.println();
-		System.out.println(countAndSay(8));System.out.print("##1113213211");System.out.println();
-		System.out.println(countAndSay(9));System.out.print("##31131211131221");System.out.println();
-
+		System.out.print(countAndSay(3)); System.out.print("##21\n");
+		System.out.print(countAndSay(4));System.out.print("##1211\n");
+		System.out.print(countAndSay(5));System.out.print("##111221\n");
+		System.out.print(countAndSay(6));System.out.print("##312211\n");
+		System.out.print(countAndSay(7));System.out.print("##13112221\n");
+		System.out.print(countAndSay(8));System.out.print("##1113213211\n");
+		System.out.print(countAndSay(9));System.out.print("##31131211131221\n");
 	}
 
 	public static String countAndSay(int n){
 		if(n==1) return "1";
 		if(n==2) return "11";
-		String res = null;
 		if(n > 2){
 			String value = countAndSay(n-1);
 			int i = 1,index = 1;
@@ -60,7 +58,7 @@ Note: Each term of the sequence of integers will be represented as a string.
 			builder.append(i).append(tmp);
 			return builder.toString();
 		}
-		return res;
+		return null;
 	}
 	
 	

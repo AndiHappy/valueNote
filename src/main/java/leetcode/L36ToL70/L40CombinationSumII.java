@@ -51,16 +51,18 @@ A solution set is:
 	    else if(remain == 0) list.add(new ArrayList<>(tempList));
 	    else{
 	        for(int i = start; i < nums.length; i++){
+	        	//“减掉”分支的作用，相同的元素，直接的跳过
 	            if(i > start && nums[i] == nums[i-1]) continue; // skip duplicates
 	            tempList.add(nums[i]);
-	            backtrack(list, tempList, nums, remain - nums[i], i + 1);
+	            backtrack(list, tempList, nums, remain - nums[i], i + 1); //不在重复的
 	            tempList.remove(tempList.size() - 1); 
 	        }
 	    }
 	} 
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		L40CombinationSumII test = new L40CombinationSumII();
+		System.out.println(test.combinationSum2(new int[]{2,5,2,1,2}, 5));
 
 	}
 
