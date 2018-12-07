@@ -54,11 +54,7 @@ public class L44WildcardMatching {
 	
 	 * */
 
-	
-	
-
 	/*
-
 Hi it really takes me a long time to figure this problem out, 
 and I would love to share my notes about this DP solution!
 
