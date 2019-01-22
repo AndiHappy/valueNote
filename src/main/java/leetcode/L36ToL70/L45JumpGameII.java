@@ -28,29 +28,50 @@ public class L45JumpGameII {
 	 * */
 
 	/**
-
-问题：给定一个数组，每个元素表示你站在该位置可以跳的最大距离。假设你站在第一个元素，求你可以跳到最后元素的最小跳跃次数。
-
-题目简洁，解题却不容易。
-
-数组中的元素值是代表一个范围区间，题目需要求的是最小跳跃次数，也就是每一次的跳跃覆盖的范围应该尽可能远，这是一个大致思路。
-
-假设 [ start, end ] 表示第 i 次跳跃才能到达的区间，nextEnd 代表在该区间中起跳的下一个最远元素，
-那么，[ end+1, nextEnd ] 表示第 i+1 次跳才能去到的范围区间。
-
-初始化 [start , end] 为 [0,0]，重复执行上面操作，直到 [start, end] 覆盖到终点元素。
-由于 [start, end] 表示第 i  次跳跃才能到达的区间，所以 i 便是最小的跳跃次数。
-在代码实现中， start  变量没有影响到程序的执行，加进去只是为了方便理解。
-
-
+	
+	问题：给定一个数组，每个元素表示你站在该位置可以跳的最大距离。假设你站在第一个元素，求你可以跳到最后元素的最小跳跃次数。
+	
+	题目简洁，解题却不容易。
+	
+	数组中的元素值是代表一个范围区间，题目需要求的是最小跳跃次数，也就是每一次的跳跃覆盖的范围应该尽可能远，这是一个大致思路。
+	
+	假设 [ start, end ] 表示第 i 次跳跃才能到达的区间，nextEnd 代表在该区间中起跳的下一个最远元素，
+	那么，[ end+1, nextEnd ] 表示第 i+1 次跳才能去到的范围区间。
+	
+	初始化 [start , end] 为 [0,0]，重复执行上面操作，直到 [start, end] 覆盖到终点元素。
+	由于 [start, end] 表示第 i  次跳跃才能到达的区间，所以 i 便是最小的跳跃次数。
+	在代码实现中， start  变量没有影响到程序的执行，加进去只是为了方便理解。
 	 * 
 	 * */
-	public int jump(int[] nums) {
-		return 0;
+
+	public static int jump(int[] nums) {
+//		int start = 0;
+		int end = 0;
+
+		int cnt = 0;
+		int nextEnd = 0;
+		
+		// 注重end的意义
+		for (int i = 0; i < nums.length - 1; i++) {
+//			if (i > end) {
+//				return -1;
+//			}
+
+			nextEnd = Math.max(nextEnd, i + nums[i]);
+			
+			if (i == end) {
+//				start = i + 1;
+				end = nextEnd;
+				cnt++;
+			}
+		}
+
+		return cnt;
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		int[] va = new int[]{2,3,1,1,4};
+		System.out.println(jump(va));
 
 	}
 
