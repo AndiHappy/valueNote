@@ -15,6 +15,10 @@ public class List {
 
 	// 表尾节点
 	ListNode tail;
+	
+	// 链表所包含的节点数量
+	long len;
+
 
 	// 节点值复制函数
 	//    void *(*dup)(void *ptr);
@@ -25,9 +29,7 @@ public class List {
 	// 节点值对比函数
 	//    int (*match)(void *ptr, void *key);
 
-	// 链表所包含的节点数量
-	long len;
-
+	
 	public static List listCreate() {
 		List list = new List();
 		list.head = list.tail = null;
