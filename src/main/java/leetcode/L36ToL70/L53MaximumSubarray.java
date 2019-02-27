@@ -26,6 +26,30 @@ public class L53MaximumSubarray {
 	
 	 * 
 	 * */
+	
+	public int maxSubArrayo2(int[] nums) {
+		int cur = nums[1],max=nums[1];
+		for (int i = 0; i < nums.length; i++) {
+			for (int j = i; j < nums.length; j++) {
+				cur = sum(nums,i,j);
+				if(cur > max){
+					max=cur;
+				}
+			}
+		}
+		return max;
+	}
+	
+	
+	
+	private int sum(int[] nums, int i, int j) {
+		int sum = nums[i];
+		for (int j2 = i+1; j2 < j; j2++) {
+			sum = sum+ nums[j2];
+		}
+		return sum;
+	}
+	
 	public int maxSubArray(int[] nums) {
 		int sumTillNow = 0, max = Integer.MIN_VALUE;
 
