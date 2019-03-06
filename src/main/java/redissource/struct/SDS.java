@@ -1,4 +1,4 @@
-package redissource;
+package redissource.struct;
 
 import java.util.Arrays;
 

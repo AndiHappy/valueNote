@@ -1,4 +1,4 @@
-package dict;
+package redissource.dict;
 
 import java.util.List;
 

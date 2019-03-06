@@ -5,4 +5,4 @@
  * 
  * java 实现redis的数据结构
  */
-package redissource;
+package redissource.struct;
