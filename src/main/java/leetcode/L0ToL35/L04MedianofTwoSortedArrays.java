@@ -3,9 +3,11 @@ package leetcode.L0ToL35;
 /**
  * @author zhailzh
  * 
- * @Date 2015111411:20:19
+ * NOTE: 对于排序的变形，有一个数组，变为两个数组的形式，根据一定的规则，也能够排序，
+ * 主要是要注重下标的变化
  * 
- *       Tag Arrays,level2
+
+Tag Arrays,level2
 There are two sorted arrays nums1 and nums2 of size m and n respectively.
 
 Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).
@@ -21,7 +23,6 @@ nums2 = [3, 4]
 
 The median is (2 + 3)/2 = 2.5
 
-
  */
 public class L04MedianofTwoSortedArrays {
 
@@ -31,6 +32,10 @@ public class L04MedianofTwoSortedArrays {
 		
 		int[] nums1 = new int[]{2,3,4,5,6};
 		int[] nums2 = new int[]{1};
+		
+		double value = st.findMedianSortedArrays(nums1, nums2);
+		System.out.println(value);
+		
 		double value1 = st.findMedianSortedArrays1(nums1, nums2);
 		System.out.println(value1);
 		
@@ -41,7 +46,7 @@ public class L04MedianofTwoSortedArrays {
 
 
 	public double findMedianSortedArrays2(int[] nums1, int[] nums2) {		
-		 int m = nums1.length, n = nums2.length;
+		    int m = nums1.length, n = nums2.length;
 	        int l = (m + n + 1) / 2;
 	        int r = (m + n + 2) / 2;
 	        return (getkth(nums1, 0, nums2, 0, l) + getkth(nums1, 0, nums2, 0, r)) / 2.0;
@@ -54,7 +59,6 @@ public class L04MedianofTwoSortedArrays {
 	    if (k == 1) return Math.min(A[aStart], B[bStart]);
 
 	    int aMid = Integer.MAX_VALUE, bMid = Integer.MAX_VALUE;
-//	    int aMid = 0, bMid = 0;
 	    if (aStart + k/2 - 1 < A.length) aMid = A[aStart + k/2 - 1]; 
 	    if (bStart + k/2 - 1 < B.length) bMid = B[bStart + k/2 - 1];        
 

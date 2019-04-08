@@ -1,5 +1,9 @@
 package leetcode.L0ToL35;
-
+/*
+ * NOTE: 
+ * 字符的算法有一个特定的隐藏的条件，总数为256个
+ * 维护窗口的一个算法，起始点，终止点，窗口大小，其中关键的在于起始点的更新（后退，前进）
+ */
 import java.util.HashMap;
 
 /**
@@ -17,15 +21,36 @@ import java.util.HashMap;
 public class L03LongestSubstringWithoutRepeatingCharacters {
 	public static void main(String[] args) {
 		L03LongestSubstringWithoutRepeatingCharacters chars = new L03LongestSubstringWithoutRepeatingCharacters();
-		System.out.println(chars.lengthOfLongestSubstring3("abcabcbbpoiuytrewq"));
+		System.out.println(chars.lengthOfLongestSubstring3("abcabcbbpoiuytrewq")+ " 11");
+		System.out.println(chars.lengthOfLongestSubstring("abcabcbbpoiuytrewq")+ " 11");
+		
+		System.out.println(chars.lengthOfLongestSubstring("dvdf") + " 3");
+		System.out.println(chars.lengthOfLongestSubstring("abba") + " 2");
+		System.out.println(chars.lengthOfLongestSubstring3("abcabcbbpo")+ " 3");
+		System.out.println(chars.lengthOfLongestSubstring("abcabcbbpo")+ " 3");
 
-		System.out.println(chars.lengthOfLongestSubstring3("abcabcbbpo"));
-
-		System.out.println(chars.lengthOfLongestSubstring3("abcabcbbpo"));
-
-		System.out.println(chars.lengthOfLongestSubstring3("abcabcbbpo"));
 	}
 
+	public int lengthOfLongestSubstring(String s) {
+		int[] tmp = new int[256];
+		for (int i = 0; i < tmp.length; i++) {
+			tmp[i] = -1;
+		}
+		char[] calue = s.toCharArray();
+		int maxLen = 0;int start = 0;
+		for (int i = 0; i < calue.length; i++) {
+			//说明已经存在这个元素了
+			if(tmp[calue[i]] != -1  && tmp[calue[i]] >= start) {
+				start = tmp[calue[i]]+1;
+			}
+			tmp[calue[i]] = i;
+			if(maxLen <i-start+1) {
+				maxLen = i-start+1;
+			}
+			
+		}
+		return maxLen;
+	}
 
 	public int lengthOfLongestSubstring3(String s) {
 		char[] content = s.toCharArray();
