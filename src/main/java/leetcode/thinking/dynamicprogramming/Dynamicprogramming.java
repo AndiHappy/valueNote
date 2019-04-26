@@ -34,6 +34,26 @@ Either that, or we could also view problem as: if we can cache it to optimize, c
 	public static void main(String[] args) {
 		//最优子结构和重叠子问题
 
+		/**
+		 
+		 In computer science, a problem is said to have optimal substructure 
+		 if an optimal solution can be constructed from optimal solutions of its subproblems. 
+		 This property is used to determine the usefulness of dynamic programming and greedy algorithms for a problem.[1]
+		 
+		 最优子结构，对应的是贪心算法和动态规划
+
+         Typically, a greedy algorithm is used to solve a problem with 
+         optimal substructure if it can be proven by induction that this is optimal at each step.[1] 
+         
+         Otherwise, provided the problem exhibits overlapping subproblems as well, dynamic programming is used. 
+         
+         If there are no appropriate greedy algorithms and the problem fails to exhibit overlapping subproblems,
+         often a lengthy but straightforward search of the solution space is the best alternative.
+         
+         贪心算法适合的是每一步都会最优的。
+         重复子问题的特性，适合动态规划
+         
+		 * */
 	}
 
 }

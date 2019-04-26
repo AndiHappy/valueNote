@@ -38,11 +38,15 @@ Of course, the context of these characters also matters in the input.
 	//[-+]?(([0-9]+(.[0-9]*)?)|.[0-9]+)(e[-+]?[0-9]+)?
 	public boolean isNumber(String s) {
 	    s = s.trim();
-	    
+	    // . 标识
 	    boolean pointSeen = false;
+	    // e 标识
 	    boolean eSeen = false;
+	    // 数字 标识
 	    boolean numberSeen = false;
+	    // e后数字标识
 	    boolean numberAfterE = true;
+	    
 	    for(int i=0; i<s.length(); i++) {
 	        if('0' <= s.charAt(i) && s.charAt(i) <= '9') {
 	            numberSeen = true;
