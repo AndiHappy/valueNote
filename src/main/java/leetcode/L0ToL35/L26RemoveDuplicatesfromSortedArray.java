@@ -1,10 +1,6 @@
 package leetcode.L0ToL35;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-
-import leetcode.base.SignalLikedList;
 
 /**
  * @author zhailz
@@ -28,14 +24,19 @@ import leetcode.base.SignalLikedList;
 	
 	Given nums = [0,0,1,1,1,2,2,3,3,4],
 	
-	Your function should return length = 5, with the first five elements of nums being modified to 0, 1, 2, 3, and 4 respectively.
+	Your function should return length = 5, 
+	with the first five elements of nums being modified to 0, 1, 2, 3, and 4 respectively.
 	
 	It doesn't matter what values are set beyond the returned length.
+	
+	
 	Clarification:
 	
 	Confused why the returned value is an integer but your answer is an array?
 	
-	Note that the input array is passed in by reference, which means modification to the input array will be known to the caller as well.
+	Note that the input array is passed in by reference, 
+	
+	which means modification to the input array will be known to the caller as well.
 	
 	Internally you can think of this:
 	
@@ -60,14 +61,20 @@ public class L26RemoveDuplicatesfromSortedArray {
 
 
 	/*
-	 *  去重
+	 *  去重:
+	 *  
+	 *  1. 首先是有序的数组
+	 *  2. 根据有序的特点，使用一遍遍历来进行完成，根据标志位来累加数组
+	 *  3. 修改数组的前面的元素
+	 *  
 	 */
 	public int removeDuplicates(int[] nums) {
 		if(nums == null || nums.length <2) return nums.length;
 		int key = nums[0],cur = 1;
 		for (int current = 1; current < nums.length; current++) {
 			if(nums[current] != key){
-				nums[++cur] = nums[current];
+				nums[cur] = nums[current];
+				++cur;
 				key = nums[current];
 			}
 		}
