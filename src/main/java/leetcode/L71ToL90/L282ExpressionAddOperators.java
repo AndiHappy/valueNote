@@ -1,4 +1,4 @@
-package leetcode.L71ToL100;
+package leetcode.L71ToL90;
 
 /**
  * @author guizhai
