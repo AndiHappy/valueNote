@@ -1,4 +1,4 @@
-package leetcode.L91ToL120;
+package leetcode.L91ToL105;
 
 
 /**
@@ -66,25 +66,34 @@ public static boolean isInterleave2(String s1, String s2, String s3) {
 
 	 */
 	
-
+	
 	/**
 	 * 关键设置：如利用dp[i][j]保存 s1 的前 i 个字符和 s2 的前 j 个字符是否可以组成 s3 的前 i+j 个字符。
 	 * 那么dp[0][0]为true
-	 * dp[i][j] 和 
+	 * dp[i][j] 去取决于d[i-1][j] s1[i] equal s3[
 	 * */
-	public static boolean isInterleave(String s1, String s2, String s3) {
-		// exception first
-    if (s1.length() + s2.length() != s3.length()) return false;
-    boolean[][] dp = new boolean[s1.length()+1][s2.length()+1];
-    for (int i = 0; i < dp.length; i++) {
-			for (int j = 0; j < dp[0].length; j++) {
-				if(s1.charAt(i) == s3.charAt(i+j) && dp[i][j]) {
-					 dp[i][j] = true;
-				}
-			}
-		}
-    return dp[s1.length()][s2.length()];
+	public static boolean isInterleave2(String s1, String s2, String s3) {
+    int l1 = s1.length(), l2 = s2.length(), l3 = s3.length();
+    if (l1 + l2 != l3) return false;
+    boolean[][] saved = new boolean[l1+1][l2+1];
+    saved[0][0] = true;
+    for (int i = 0; i <= l1; i++) {
+        for (int j = 0; j <= l2; j++) {
+            if (i < s1.length() && i+j < s3.length()
+                && s1.charAt(i) == s3.charAt(i+j) && saved[i][j]) {
+                saved[i+1][j] = true;
+            }
+            if (j < s2.length() && i+j < s3.length() 
+                && s2.charAt(j) == s3.charAt(i+j) && saved[i][j]) {
+                saved[i][j+1] = true;
+            }
+        }
+    }
+    return saved[l1][l2];
 }
+
+
+	
 
 
 	
@@ -93,6 +102,7 @@ public  static boolean isInterleave(String s1, String s2, String s3,
     if (saved[p1][p2] == 1) return true;
     if (saved[p1][p2] == -1) return false;
     if (p3 == s3.length()) return true;
+    
     boolean result = false;
     if (p1 < s1.length() && s1.charAt(p1) == s3.charAt(p3)
             && isInterleave(s1, s2, s3, p1+1, p2, p3+1, saved))
