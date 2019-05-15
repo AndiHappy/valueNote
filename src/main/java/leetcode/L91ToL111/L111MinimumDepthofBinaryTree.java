@@ -38,19 +38,20 @@ public class L111MinimumDepthofBinaryTree {
 	public int helper(TreeNode root, int height) {
 		if (root == null)
 			return height;
-		int lh = helper(root.left, height + 1);
-		int rh = helper(root.right, height + 1);
 		if (root.left == null)
-			return rh;
+			return helper(root.right, height + 1);
 		else if (root.right == null)
-			return lh;
+			return helper(root.left, height + 1);
 		else
-			return Math.min(lh, rh);
+			return Math.min(helper(root.left, height + 1), helper(root.right, height + 1));
 	}
 
 	public static void main(String[] args) {
 		
-
+		L111MinimumDepthofBinaryTree test = new L111MinimumDepthofBinaryTree();
+		test.minDepth(new TreeNode(new int[] {3,9,20,-100,-100,15,7}));
+		
+		
 	}
 
 }
