@@ -59,8 +59,13 @@ public class L115DistinctSubsequences {
 		contains T[0..i] that many times as distinct subsequences. Therefor 
 		the result will be mem[T.length()][S.length()].
 		we can build this array rows-by-rows:
-		the first row must be filled with 1. That's because the empty string is a subsequence of any string but only 1 time. So mem[0][j] = 1 for every j. So with this we not only make our lives easier, but we also return correct value if T is an empty string.
-		the first column of every rows except the first must be 0. This is because an empty string cannot contain a non-empty string as a substring -- the very first item of the array: mem[0][0] = 1, because an empty string contains the empty string 1 time.
+		the first row must be filled with 1. 
+		That's because the empty string is a subsequence of any string but only 1 time. 
+		So mem[0][j] = 1 for every j. So with this we not only make our lives easier, 
+		but we also return correct value if T is an empty string.
+		the first column of every rows except the first must be 0. This is because an empty string 
+		cannot contain a non-empty string as a substring -- 
+		the very first item of the array: mem[0][0] = 1, because an empty string contains the empty string 1 time.
 		So the matrix looks like this:
 
 		  S 0123....j
