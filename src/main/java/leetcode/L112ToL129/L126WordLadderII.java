@@ -59,14 +59,21 @@ Explanation: The endWord "cog" is not in wordList, therefore no possible transfo
 */
 		public List<List<String>> findLadders(String start, String end, List<String> wordList) {
 		   HashSet<String> dict = new HashSet<String>(wordList);
-		   List<List<String>> res = new ArrayList<List<String>>();         
+		   
+		   List<List<String>> res = new ArrayList<List<String>>(); 
+		   
 		   HashMap<String, ArrayList<String>> nodeNeighbors = new HashMap<String, ArrayList<String>>();// Neighbors for every node
+		   
 		   HashMap<String, Integer> distance = new HashMap<String, Integer>();// Distance of every node from the start node
+		   
 		   ArrayList<String> solution = new ArrayList<String>();
 
-		   dict.add(start);          
-		   bfs(start, end, dict, nodeNeighbors, distance);                 
+		   dict.add(start);      
+		   
+		   bfs(start, end, dict, nodeNeighbors, distance); 
+		   
 		   dfs(start, end, dict, nodeNeighbors, distance, solution, res);   
+		   
 		   return res;
 		}
 

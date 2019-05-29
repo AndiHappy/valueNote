@@ -1,4 +1,4 @@
-package leetcode.L130ToL159;
+package leetcode.L130ToL140;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +35,7 @@ public class L131PalindromePartitioning {
 	unchoose            Do the opposite operation of choose.
 	
 	Let's take this problem as an example:
+	
 	1.Define helper():     
 					Usually we need a helper funcition in backtracking problem, to accept more parameters.
 	2.Parameters: 
@@ -45,8 +46,18 @@ public class L131PalindromePartitioning {
 	  							
 	  2. A start index or an end index which indicate which part you are working on: 
 	  							For this problem, we use substring to indicate the start index.
-	  3. A step result, to remember current choose and then do unchoose : For this problem, we use List<String> step.
-	  4. A final result, to remember the final result. Usually when we add, we use 'result.add(new ArrayList<>(step))' instead of 'result.add(step)', since step is reference passed. We will modify step later, so we need to copy it and add the copy to the result;
+	  
+	  3. A step result, to remember current choose and then do unchoose : 
+	  
+	  						For this problem, we use List<String> step.
+	  
+	  4. A final result, to remember the final result. U
+	  
+	  sually when we add, we use 'result.add(new ArrayList<>(step))' instead of 'result.add(step)', 
+	  since step is reference passed. We will modify step later, 
+	  so we need to copy it and add the copy to the result;
+	  
+	  
 	3.Base case: The base case defines when to add step into result, and when to return.
 	4.Use for-loop: Usually we need a for loop to iterate though the input String s, so that we can choose all the options.
 	5.Choose: In this problem, if the substring of s is palindrome, we add it into the step, which means we choose this substring.
@@ -90,6 +101,7 @@ public class L131PalindromePartitioning {
 	      }
 	      return true;
 	  }
+	  
 	Other related backtracking problems discuss:
 	A general approach to backtracking questions in Java (Subsets, Permutations, Combination Sum, Palindrome Partitioning)
 	 * 
