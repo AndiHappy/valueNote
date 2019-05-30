@@ -1,6 +1,6 @@
 package leetcode.L112ToL129;
 
-import leetcode.base.TreeNode;
+import baseAlg.base.TreeNode;
 
 /**
  * @author guizhai

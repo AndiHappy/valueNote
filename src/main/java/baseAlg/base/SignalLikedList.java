@@ -1,4 +1,4 @@
-package leetcode.base;
+package baseAlg.base;
 
 import java.util.ArrayList;
 import java.util.Collection;

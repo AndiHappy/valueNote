@@ -3,7 +3,7 @@ package leetcode.L112ToL129;
 import java.util.ArrayList;
 import java.util.List;
 
-import leetcode.base.TreeNode;
+import baseAlg.base.TreeNode;
 
 /**
  * @author guizhai

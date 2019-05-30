@@ -1,4 +1,4 @@
-package leetcode.base;
+package baseAlg.base;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

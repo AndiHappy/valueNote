@@ -1,4 +1,4 @@
-package leetcode.base;
+package baseAlg.base;
 public class Node<E> {
     E item;
     public Node<E> next;

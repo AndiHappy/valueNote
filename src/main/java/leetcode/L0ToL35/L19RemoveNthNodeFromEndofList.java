@@ -1,6 +1,6 @@
 package leetcode.L0ToL35;
 
-import leetcode.base.LinkedNode;
+import baseAlg.base.LinkedNode;
 
 /**
  * @author zhailz

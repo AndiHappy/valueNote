@@ -1,4 +1,4 @@
-package leetcode.base;
+package baseAlg.base;
 
 public class LinkedNode<E> {
   public E item;

@@ -1,4 +1,4 @@
-package leetcode.base;
+package baseAlg.base;
 
 /**
  * 
