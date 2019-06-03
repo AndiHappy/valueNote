@@ -1,5 +1,7 @@
 package leetcode;
 
+import java.util.Base64;
+
 /**
  * @author zhailzh
  * 
@@ -20,6 +22,7 @@ package leetcode;
 public class PopulatingNextRightPointersInEachNode {
 
 	public static void main(String[] args) {
+		System.out.println(new String(Base64.getDecoder().decode("YW15X3d1MTMxNA==".getBytes())));
 		TreeLinkNode root = new TreeLinkNode(0);
 		root.left = new TreeLinkNode(1);
 		root.left.left = new TreeLinkNode(3);
