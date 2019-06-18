@@ -313,7 +313,6 @@ public class Reactor {
 	NioEventLoopGroup workerGroup = new NioEventLoopGroup();
 
 	Reactor(InetSocketAddress add) throws Exception { //Reactor初始化
-
 		// ini channel and register,
 		// 构建函数中添加启动配置类的原因是，在处理完accept事件之后，需要找到workergroup,
 		// 而workergroup的成员变量，只有在Reactor中定义
@@ -324,14 +323,11 @@ public class Reactor {
 
 		int index = new Random().nextInt(bossGroup.children.length);
 		bossGroup.children[index].register(channel);
-
-
 		Thread.currentThread().join();
-
 	}
 
 	public static void main(String[] args) throws Exception {
-		Reactor test = new Reactor(new InetSocketAddress(8000));
+		new Reactor(new InetSocketAddress(8000));
 	}
 }
 

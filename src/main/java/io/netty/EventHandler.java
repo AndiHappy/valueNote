@@ -23,7 +23,6 @@ public class EventHandler {
 	 * 在实际的netty的框架中，下面的这些的阶段性的操作都是通过handler来进行处理的。
 	 * */
 	public static void read(NioServerSocketChannel a) {
-		final int maxMessagesPerRead = 16;
 		 try {
 			 // 接受客户端的链接
 			SocketChannel ch =((ServerSocketChannel) a.ch).accept();
