@@ -72,9 +72,6 @@ class NioEventLoop implements Runnable {
 			return selector;
 		}
 		try {
-			/**
-			 * 令人震惊的注入操作
-			 * */
 			SelectedSelectionKeySet selectedKeySet = new SelectedSelectionKeySet();
 
 			Class<?> selectorImplClass = Class.forName("sun.nio.ch.SelectorImpl", false,
@@ -94,7 +91,7 @@ class NioEventLoop implements Runnable {
 			//注入自定义的SelectedSelectionKeySet
 			selectedKeysField.set(selector, selectedKeySet);
 			publicSelectedKeysField.set(selector, selectedKeySet);
-
+			
 			selectedKeys = selectedKeySet;
 		} catch (Throwable t) {
 			selectedKeys = null;
@@ -196,7 +193,7 @@ class NioEventLoop implements Runnable {
 			 // Also check for readOps of 0 to workaround possible JDK bug which may otherwise lead to a spin loop
 			 //read 和 accept事件
 			 if ((readyOps & (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != 0 || readyOps == 0) {
-			     EventHandler.read(a);
+			     EventHandler.accept(a);
 			     if (!a.ch.isOpen()) {
 			         // Connection already closed - no need to handle write.
 			         return;

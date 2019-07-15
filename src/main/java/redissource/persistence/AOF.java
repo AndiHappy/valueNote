@@ -119,5 +119,8 @@ AOF 可以由用户手动触发，也可以由服务器自动触发。
  * 
  * */
 public class AOF {
+	public static void main(String[] args) {
+		System.out.println(String.valueOf(Long.MAX_VALUE));
+	}
 
 }
