@@ -1,6 +1,8 @@
 package leetcode.L;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author guizhai
@@ -9,7 +11,10 @@ import java.util.Arrays;
 public class L395LongestSubstringwithAtLeastKRepeatingCharacters {
 
 	/**
-	Find the length of the longest substring T of a given string (consists of lowercase letters only) such that every character in T appears no less than k times.
+	 
+	Find the length of the longest substring T of a given string 
+	(consists of lowercase letters only) such that every character 
+	in T appears no less than k times.
 
 Example 1:
 
@@ -31,7 +36,7 @@ Output:
 The longest substring is "ababb", as 'a' is repeated 2 times and 'b' is repeated 3 times.
 	 */
 	
-	public int longestSubstring(String s, int k) {
+	public  int longestSubstring(String s, int k) {
 		
     if (s == null || s.length() == 0) return 0;
     
@@ -105,13 +110,46 @@ The longest substring is "ababb", as 'a' is repeated 2 times and 'b' is repeated
      return max;
  }
 	
-	
+/**
+ The idea is pretty basic, find the point where we should split the string,
+  eg, the position of character which total count is <k, then dfs it then find the max.
+For Example: bbcddefegaghfh and 2, so we shall dfs on "bb", "ddefeg", "ghfh", since a , c only appears1 for once.
+
+ * **/	
+	 
+	 public int longestSubstring_DC(String s, int k) {
+     if (s == null || s.length() == 0 || k == 0) return 0;
+     int[] count = new int[26];
+     int res = 0;
+     for (int i = 0; i < s.length(); i++) {
+         count[s.charAt(i) - 'a']++;
+     }
+     List<Integer> pos = new ArrayList<Integer>();
+     for (int i = 0; i < s.length(); i++) {
+         if (count[s.charAt(i) - 'a'] < k) pos.add(i);
+     }
+     if (pos.size() == 0) return s.length();
+     
+     pos.add(0, -1);
+     pos.add(s.length());
+     for (int i = 1; i < pos.size(); i++) {
+         int start = pos.get(i-1) + 1;
+         int end = pos.get(i);
+         int next = longestSubstring(s.substring(start, end), k);
+         res = Math.max(res, next);
+     }
+     
+     return res;
+ }
 	
 	public static void main(String[] args) {
 		/**
 		 * "bbaaacbd" 3
 		 * */ 
 
+		L395LongestSubstringwithAtLeastKRepeatingCharacters test = new L395LongestSubstringwithAtLeastKRepeatingCharacters();
+		int vau = test.longestSubstring("bbccddefegaghfh", 2);
+		System.out.println(vau);
 	}
 
 }
