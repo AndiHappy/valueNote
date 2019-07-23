@@ -16,7 +16,7 @@ and then combine solutions to the smaller problems, I'll have solved the problem
 calculation steps, we term these as overlapping sub problems. 
 
 Hence instead of solving for the same calculation steps over and over, 
-we can store solutions to previous calculated steps it into a memory such as hash map or an array. 
+we can store solutions to previous calculated steps it into a memory such as hash baseAlg.map or an array. 
 
 Note: Some problems that exhibit optimal substructure but not overlapping subproblems are termed  
 'divide and conquer' method instead. Such as merge sort.

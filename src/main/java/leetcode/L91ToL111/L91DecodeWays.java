@@ -32,7 +32,7 @@ Explanation: It could be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).
 	 */
 	
 	public int numDecodings(String s) {
-    /*map to avoid repeated calculations*/
+    /*baseAlg.map to avoid repeated calculations*/
     HashMap<String, Integer> dp = new HashMap<>();
     return noDecHelper(s, dp);
 }
@@ -49,7 +49,7 @@ private int noDecHelper(String s, HashMap<String, Integer> dp) {
     /*check we have already done calculations of current string*/
     Integer n = dp.get(s);
     if (n != null) {
-        /*if yes, return from map*/
+        /*if yes, return from baseAlg.map*/
         return n;
     }
     

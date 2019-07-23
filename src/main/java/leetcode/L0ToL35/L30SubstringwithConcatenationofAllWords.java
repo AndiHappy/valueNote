@@ -95,7 +95,7 @@ public class L30SubstringwithConcatenationofAllWords {
 						addedCount--; //remove the head and check new substring, so count-- and move head to new position.
 						String preHead = s.substring(k, k + len);
 						if (currWords.get(preHead) == 1)
-							currWords.remove(preHead); //update the currWords map.
+							currWords.remove(preHead); //update the currWords baseAlg.map.
 						else
 							currWords.put(preHead, currWords.get(preHead) - 1);
 						k += len;
@@ -105,7 +105,7 @@ public class L30SubstringwithConcatenationofAllWords {
 					String preHead = s.substring(k, k + len);
 					addedCount--;
 					if (currWords.get(preHead) == 1)
-						currWords.remove(preHead); //update the currWords map.
+						currWords.remove(preHead); //update the currWords baseAlg.map.
 					else
 						currWords.put(preHead, currWords.get(preHead) - 1);
 					k += len; //don't move j this case.
