@@ -30,12 +30,17 @@ public class RBTree<T extends Comparable<T>> {
 		public boolean red;
 		public Node left;
 		public Node right;
+		
+		@Override
+		public String toString() {
+			return "value: " +value.toString();
+		}
 	}
 
-	public void treeify(Node[] tab) {
+	public void treeify(List<RBTree<Integer>.Node> tab) {
 		Node root = this.root;
-		for (int i = 0; i < tab.length; i++) {
-			Node current = tab[i];
+		for (int i = 0; i < tab.size(); i++) {
+			Node current = (RBTree<T>.Node) tab.get(i);
 			// 如果根节点为null的时候，直接设置root节点，并且x节点为黑节点
 			if (root == null) {
 				current.parent = null;
@@ -72,7 +77,7 @@ public class RBTree<T extends Comparable<T>> {
         if ((xp = x.parent) == null) {
             x.red = false;
             return x;
-        }// x为红色节点，并且挂在root节点下
+        }// 父节点为黑色的节点 或者 父节点的父节点即爷爷节点为null，也就是两层的数据结构
         else if (!xp.red || (xpp = xp.parent) == null) {
        	 return root;
         }
@@ -96,45 +101,107 @@ public class RBTree<T extends Comparable<T>> {
                 xpp.red = true;
                 x = xpp;
             }else {
-//           	 // TODO 关键就在于什么时间使用左旋，什么时间使用右旋了
-//                if (x == xp.right) {
-//                    root = rotateLeft(root, x = xp);
-//                    xpp = (xp = x.parent) == null ? null : xp.parent;
-//                }
-//                //TODO 父节点不为null，左旋之后右旋的可能？？
-//                if (xp != null) {
-//                    xp.red = false;
-//                    if (xpp != null) {
-//                        xpp.red = true;
-//                        root = rotateRight(root, xpp);
-//                    }
-//                }
-//            }
-//        } else {
-//       	 // 奖项类型的操作
-//            if (xppl != null && xppl.red) {
-//                xppl.red = false;
-//                xp.red = false;
-//                xpp.red = true;
-//                x = xpp;
-//            }
-//            else {
-//                if (x == xp.left) {
-//                    root = rotateRight(root, x = xp);
-//                    xpp = (xp = x.parent) == null ? null : xp.parent;
-//                }
-//                if (xp != null) {
-//                    xp.red = false;
-//                    if (xpp != null) {
-//                        xpp.red = true;
-//                        root = rotateLeft(root, xpp);
-//                    }
-//                }
+           	 // TODO 关键就在于什么时间使用左旋，什么时间使用右旋了
+                if (x == xp.right) {
+                    root = rotateLeft(root, x = xp);
+                    xpp = (xp = x.parent) == null ? null : xp.parent;
+                }
+                //配合着一系列的变色的操作
+                if (xp != null) {
+                    xp.red = false;
+                    if (xpp != null) {
+                        xpp.red = true;
+                        root = rotateRight(root, xpp);
+                    }
+                }
+            }
+        } else {
+       	 // 奖项类型的操作
+            if (xppl != null && xppl.red) {
+                xppl.red = false;
+                xp.red = false;
+                xpp.red = true;
+                x = xpp;
+            }
+            else {
+                if (x == xp.left) {
+                    root = rotateRight(root, x = xp);
+                    xpp = (xp = x.parent) == null ? null : xp.parent;
+                }
+                if (xp != null) {
+                    xp.red = false;
+                    if (xpp != null) {
+                        xpp.red = true;
+                        root = rotateLeft(root, xpp);
+                    }
+                }
             }
         }
     }
 	}
 
+	
+	/* ------------------------------------------------------------ */
+  // Red-black tree methods, all adapted from CLR
+  /* 
+   *
+   * 左旋示意图(对节点P进行左旋)：
+   *      px                              px
+   *     /                               /
+   *    p                               y                
+   *   /  \      --(左旋)-.            /   \                #
+   *  lx   pr                          p    ry     
+   *     /   \                       /  \
+   *    ly   ry                     lx  ly  
+   *
+   *
+   */
+   Node rotateLeft(Node root,Node p) {
+      Node r, pp, rl;
+      if (p != null && (r = p.right) != null) {
+          if ((rl = p.right = r.left) != null) 
+              rl.parent = p;// p.right 更改为r.left 也即是（p.right.left）,并且把p.right.left的parent指向p
+          if ((pp = r.parent = p.parent) == null) //判定特殊的情况，置黑根节点
+              (root = r).red = false;
+          else if (pp.left == p) // 旋转上去，r替换p的位置
+              pp.left = r;
+          else
+              pp.right = r;
+          r.left = p;// 左旋的标志动作，旋上去的左孩子为原来的节点p
+          p.parent = r;
+      }
+      return root;
+  }
+
+  /* 
+   *
+   * 右旋示意图(对节点p进行右旋)：
+   *      px                              px
+   *       \                                \
+   *        p                                y                
+   *      /   \                             /   \                #
+   *     y     pr                          ly    p     
+   *   /   \                                    /  \
+   *  ly   ry                                  ry  pr  
+   *
+   *
+   */
+    Node rotateRight(Node root,Node p) {
+      Node l, pp, lr;
+      if (p != null && (l = p.left) != null) {
+          if ((lr = p.left = l.right) != null)
+              lr.parent = p;
+          if ((pp = l.parent = p.parent) == null)
+              (root = l).red = false;
+          else if (pp.right == p)
+              pp.right = l;
+          else
+              pp.left = l;
+          l.right = p;
+          p.parent = l;
+      }
+      return root;
+  }
 
 	public static void main(String[] args) {
 		RBTree<Integer> tree = new RBTree<Integer>();
@@ -149,6 +216,8 @@ public class RBTree<T extends Comparable<T>> {
 			RBTree<Integer>.Node e = new RBTree.Node(i);
 			table.add(e);
 		}
+		
+		treeify(table);
 		
 		
 	}
