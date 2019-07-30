@@ -59,8 +59,14 @@ public class MyMap<K,V> {
    * 高中低位的字符全部的参与进来，把key的hash值打散
    */
 	 static final int hash(Object key) {
-     int h;
-     return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+		
+//     int h;
+//     return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+		 
+     /**
+		  * 为了测试，hash值一律的返回0
+		  * */
+     return 0;
  }
 	 
 	 
@@ -68,7 +74,7 @@ public class MyMap<K,V> {
 	  * Node 为节点
 	  * Map.Entry<K,V> 为节点需要满足的条件：getKey getValue setValue equals等
 	  * */
-	public static class Node<K,V> implements Map.Entry<K,V> {
+	public static class Node<K,V>  {
      public final int hash; // 包含一个hash值
      public final K key;
      public V value;
@@ -165,7 +171,7 @@ public class MyMap<K,V> {
    /**
     * HashMap.Node subclass for normal LinkedHashMap entries.
     */
-   static class Entry<K,V> extends Node<K,V> {
+   public static class Entry<K,V> extends Node<K,V> {
        Entry<K,V> before, after;
        Entry(int hash, K key, V value, Node<K,V> next) {
            super(hash, key, value, next);
@@ -187,7 +193,7 @@ public class MyMap<K,V> {
 		 *  4. 任何一个节点向下遍历到其子孙的叶子节点，所经过的黑节点个数必须相等 
 		 *  5. 空节点被认为是黑色的
 		 */
-	 static class TreeNode<K,V> extends Entry<K,V> {
+	public static class TreeNode<K,V> extends Entry<K,V> {
      public TreeNode<K,V> parent;  // red-black tree links
      public TreeNode<K,V> left;
      public TreeNode<K,V> right;
@@ -210,20 +216,31 @@ public class MyMap<K,V> {
 
      /**
       * Ensures that the given root is the first node of its bin.
+      * 给定的root节点为table的链表的第一个节点
+      * root的next原来的节点为first节点
+      * root节点在原来的链表的序列中被删除。
+      * 链表中的节点
       */
      static <K,V> void moveRootToFront(Node<K,V>[] tab, TreeNode<K,V> root) {
          int n;
          if (root != null && tab != null && (n = tab.length) > 0) {
              int index = (n - 1) & root.hash;
+             //原来的first节点
              TreeNode<K,V> first = (TreeNode<K,V>)tab[index];
              if (root != first) {
                  Node<K,V> rn;
+                 // 设置root接点为tab[index]，既是第一个节点
                  tab[index] = root;
                  TreeNode<K,V> rp = root.prev;
+                 
+                 /**
+                  *  rp-> root -> rn 跳过了root节点：rn.prev = rp 
+                  * */
                  if ((rn = root.next) != null)
                      ((TreeNode<K,V>)rn).prev = rp;
                  if (rp != null)
                      rp.next = rn;
+                 
                  if (first != null)
                      first.prev = root;
                  root.next = first;
@@ -396,11 +413,16 @@ public class MyMap<K,V> {
                      xp.left = x;
                  else
                      xp.right = x;
+                 
+                 // xp的next为x 
                  xp.next = x;
+                 // x的pre为parent 可以理解，顺着x的pre可以找到根节点
                  x.parent = x.prev = xp;
                  if (xpn != null)
                      ((TreeNode<K,V>)xpn).prev = x;
+                 
                  moveRootToFront(tab, balanceInsertion(root, x));
+                 
                  return null;
              }
          }
@@ -415,25 +437,45 @@ public class MyMap<K,V> {
       * linkages. If the current tree appears to have too few nodes,
       * the bin is converted back to a plain bin. (The test triggers
       * somewhere between 2 and 6 nodes, depending on tree structure).
+      
+      
+				删除在此调用之前必须存在的给定节点。
+				
+				这比典型的红黑删除代码更加混乱，因为我们无法将内部节点的内容与叶子后继交换，
+				后者由“下一个”指针固定，这些指针可以在此期间独立访问，遍历。
+				所以我们交换树链接。
+				
+				如果当前树似乎有太少的节点，则bin将转换回普通bin。 （测试会在2到6个节点之间触发，具体取决于树结构）。
+      
       */
-     final void removeTreeNode(MyMap<K,V> map, Node<K,V>[] tab,
-                               boolean movable) {
+     final void removeTreeNode(MyMap<K,V> map, Node<K,V>[] tab,boolean movable) {
          int n;
          if (tab == null || (n = tab.length) == 0)
              return;
+         
+         // 所在的位置
          int index = (n - 1) & hash;
+         
+         //root节点 tab[index]
          TreeNode<K,V> first = (TreeNode<K,V>)tab[index], root = first, rl;
+         
+         // 链表数据结构的节点
          TreeNode<K,V> succ = (TreeNode<K,V>)next, pred = prev;
+         
          if (pred == null)
              tab[index] = first = succ;
          else
              pred.next = succ;
+         
          if (succ != null)
              succ.prev = pred;
+         
          if (first == null)
              return;
+         
          if (root.parent != null)
              root = root.root();
+         
          if (root == null
              || (movable
                  && (root.right == null
@@ -442,6 +484,7 @@ public class MyMap<K,V> {
              tab[index] = first.untreeify(map);  // too small
              return;
          }
+         
          TreeNode<K,V> p = this, pl = left, pr = right, replacement;
          if (pl != null && pr != null) {
              TreeNode<K,V> s = pr, sl;
@@ -855,6 +898,7 @@ public class MyMap<K,V> {
     * table is too small, in which case resizes instead.
     */
    public final void treeifyBin(Node<K,V>[] tab, int hash) {
+  	 	this.table = tab;
        int n, index; Node<K,V> e;
 //       if (tab == null || (n = tab.length) < MIN_TREEIFY_CAPACITY)
        if (tab == null || (n = tab.length) < 1)
@@ -873,10 +917,12 @@ public class MyMap<K,V> {
                tl = p;
            } while ((e = e.next) != null);
            
-           
+           // 此时的hd为1->2->3->...->end 为链表的数据结构
            if ((tab[index] = hd) != null)
           	 	 // 链状的TreeNode节点转为为树状
                hd.treeify(tab);
+           		 System.out.println(tab[index]);
+           		 System.out.println(hd);
        }
    }
 	 
@@ -1024,34 +1070,104 @@ public class MyMap<K,V> {
      }
      return newTab;
  }
+   
+   // 删除的逻辑
+   public V remove(Object key) {
+     Node<K,V> e;
+     return (e = removeNode(hash(key), key, null, false, true)) == null ?
+         null : e.value;
+ }
+   
+   /**
+    * Implements Map.remove and related methods.
+    *
+    * @param hash hash for key
+    * @param key the key
+    * @param value the value to match if matchValue, else ignored
+    * @param matchValue if true only remove if value is equal
+    * @param movable if false do not move other nodes while removing
+    * @return the node, or null if none
+    */
+   final Node<K,V> removeNode(int hash, Object key, Object value, boolean matchValue, boolean movable) {
+       Node<K,V>[] tab; Node<K,V> p; int n, index;
+       
+       if ((tab = table) != null && (n = tab.length) > 0 && (p = tab[index = (n - 1) & hash]) != null) {
+      	 
+           Node<K,V> node = null, e; K k; V v;
+           // finde node value 
+           if (p.hash == hash &&((k = p.key) == key || (key != null && key.equals(k))))
+               node = p;
+           else if ((e = p.next) != null) {
+               if (p instanceof TreeNode)
+                   node = ((TreeNode<K,V>)p).getTreeNode(hash, key);
+               else {
+                   do {
+                       if (e.hash == hash &&((k = e.key) == key ||(key != null && key.equals(k)))) {
+                           node = e;
+                           break;
+                       }
+                       p = e;
+                   } while ((e = e.next) != null);
+               }
+           }
+           
+           // !matchValue || (v = node.value) == value
+           // node为key值对应的节点，p为key的前一个节点
+           if (node != null && (!matchValue || (v = node.value) == value ||(value != null && value.equals(v)))) {
+               if (node instanceof TreeNode)
+              	 	// node 为当前的节点
+                   ((TreeNode<K,V>)node).removeTreeNode(this, tab, movable);
+               else if (node == p)
+                   tab[index] = node.next;
+               else
+                   p.next = node.next;
+               
+               ++modCount;
+               --size;
+//               afterNodeRemoval(node);
+               return node;
+           }
+       }
+       return null;
+   }
+   
+   
+   
 	/**
 	 * @param args
 	 */
 	@SuppressWarnings({ "rawtypes", "unused", "unchecked" })
 	public static void main(String[] args) {
-//		treeifyBin(Node<K,V>[] tab, int hash)
-		Node[] tab = new Node[20];
-		int hash = 11;
-		Node<String, String> next15= new Node<String, String>(hash,"11","15",null);
-		Node<String, String> next14= new Node<String, String>(hash,"11","14",next15);
-		Node<String, String> next13= new Node<String, String>(hash,"11","13",next14);
-		Node<String, String> next12 = new Node<String, String>(hash,"11","12",next13);
-		Node<String, String> next11 = new Node<String, String>(hash,"11","11",next12);
-		Node<String, String> next10= new Node<String, String>(hash,"11","10",next11);
-		Node<String, String> next9 = new Node<String, String>(hash,"11","9",next10);
-		Node<String, String> next8 = new Node<String, String>(hash,"11","8",next9);
-		Node<String, String> next7= new Node<String, String>(hash,"11","7",next8);
-		Node<String, String> next6 = new Node<String, String>(hash,"11","6",next7);
-		Node<String, String> next5 = new Node<String, String>(hash,"11","5",next6);
-		Node<String, String> next4 = new Node<String, String>(hash,"11","4",next5);
-		Node<String, String> next3 = new Node<String, String>(hash,"11","3",next4);
-		Node<String, String> next2 = new Node<String, String>(hash,"11","3",next3);
-		Node<String, String> next = new Node<String, String>(hash,"11","2",next2);
-		tab[3] = new Node<String, String>(hash, "11", "1", next);
+//		Node[] tab = new Node[20];
+//		int hash = 11;
+//		Node<String, String> next15= new Node<String, String>(hash,"11","15",null);
+//		Node<String, String> next14= new Node<String, String>(hash,"11","14",next15);
+//		Node<String, String> next13= new Node<String, String>(hash,"11","13",next14);
+//		Node<String, String> next12 = new Node<String, String>(hash,"11","12",next13);
+//		Node<String, String> next11 = new Node<String, String>(hash,"11","11",next12);
+//		Node<String, String> next10= new Node<String, String>(hash,"11","10",next11);
+//		Node<String, String> next9 = new Node<String, String>(hash,"11","9",next10);
+//		Node<String, String> next8 = new Node<String, String>(hash,"11","8",next9);
+//		Node<String, String> next7= new Node<String, String>(hash,"11","7",next8);
+//		Node<String, String> next6 = new Node<String, String>(hash,"11","6",next7);
+//		Node<String, String> next5 = new Node<String, String>(hash,"11","5",next6);
+//		Node<String, String> next4 = new Node<String, String>(hash,"11","4",next5);
+//		Node<String, String> next3 = new Node<String, String>(hash,"11","3",next4);
+//		Node<String, String> next2 = new Node<String, String>(hash,"11","3",next3);
+//		Node<String, String> next = new Node<String, String>(hash,"11","2",next2);
+//		tab[3] = new Node<String, String>(hash, "11", "1", next);
+//		TreeNode node = new TreeNode<String, String>(hash, "11", "0", next);
+//		MyMap<String, String> mymap = new MyMap<String, String>();
+//		mymap.treeifyBin(tab, hash);
 		
-		TreeNode node = new TreeNode<String, String>(hash, "11", "0", next);
+		//正经的测试
 		MyMap<String, String> mymap = new MyMap<String, String>();
-		mymap.treeifyBin(tab, hash);
+		for (int i = 0; i < 30; i++) {
+			mymap.put("k"+i, "v"+i);
+		}
+		System.out.println(mymap.table.length);
+		
+		mymap.remove("k0");
 	}
 
 }

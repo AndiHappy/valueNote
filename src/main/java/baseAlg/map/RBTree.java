@@ -35,6 +35,17 @@ public class RBTree<T extends Comparable<T>> {
 		public String toString() {
 			return "value: " +value.toString();
 		}
+		
+		void print(){
+			System.out.println("value: "+ this.value + " left: " + (this.left == null?"null":this.left.value) + " right: " + (this.right == null?"null":this.right.value));
+			if(this.left != null) {
+				this.left.print();
+			}
+			
+			if(this.right != null) {
+				this.right.print();
+			}
+		}
 	}
 
 	public void treeify(List<RBTree<Integer>.Node> tab) {
@@ -59,7 +70,14 @@ public class RBTree<T extends Comparable<T>> {
           	 else
           		 nodep.right = current;
           	 //检查插入的是否破坏了规则
+          	 System.out.println("---------------------------------------------------------------------------------------------");
+
+          	 root.print();
+          	 
              root = balanceInsertion(root, current);
+          	 System.out.println("---------------------------------------------------------------------------------------------");
+
+             root.print();
              break;
            }
 				}
@@ -101,12 +119,12 @@ public class RBTree<T extends Comparable<T>> {
                 xpp.red = true;
                 x = xpp;
             }else {
-           	 // TODO 关键就在于什么时间使用左旋，什么时间使用右旋了
+           	 // TODO 右孩子使用左旋
                 if (x == xp.right) {
                     root = rotateLeft(root, x = xp);
                     xpp = (xp = x.parent) == null ? null : xp.parent;
                 }
-                //配合着一系列的变色的操作
+                //配合着一系列的变色的操作，已知的叶子节点为红色，则父节点设置为黑色，爷爷节点设置为红色
                 if (xp != null) {
                     xp.red = false;
                     if (xpp != null) {
