@@ -2,6 +2,8 @@ package baseAlg.map;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -68,6 +70,12 @@ public class MyMap<K,V> {
 		  * */
      return 0;
  }
+	 
+	 // Callbacks to allow LinkedHashMap post-actions
+   void afterNodeAccess(Node<K,V> p) { }
+   void afterNodeInsertion(boolean evict) { }
+   void afterNodeRemoval(Node<K,V> p) { }
+
 	 
 	 
 	 /**
@@ -404,23 +412,29 @@ public class MyMap<K,V> {
                  }
                  dir = tieBreakOrder(k, pk);
              }
-
+             
+             /**
+              * p当前的节点，插入的节点，if语句中p为null
+              * */
              TreeNode<K,V> xp = p;
              if ((p = (dir <= 0) ? p.left : p.right) == null) {
+            	 	// 新节点的next为原来节点的next，这个比较的有意思，即使在treeNode的节点里面还保持着next的有效性
                  Node<K,V> xpn = xp.next;
-                 TreeNode<K,V> x = map.newTreeNode(h, k, v, xpn);
+                 TreeNode<K,V> x = map.newTreeNode(h, k, v, xpn);//③
                  if (dir <= 0)
                      xp.left = x;
                  else
                      xp.right = x;
                  
-                 // xp的next为x 
+                 // xp的next为x，原来的xp的next在建立的新的节点，设置为了next 对应的语句是③
                  xp.next = x;
                  // x的pre为parent 可以理解，顺着x的pre可以找到根节点
                  x.parent = x.prev = xp;
+                 
                  if (xpn != null)
                      ((TreeNode<K,V>)xpn).prev = x;
                  
+                 // 确定table的第一个节点为root节点
                  moveRootToFront(tab, balanceInsertion(root, x));
                  
                  return null;
@@ -462,42 +476,59 @@ public class MyMap<K,V> {
          // 链表数据结构的节点
          TreeNode<K,V> succ = (TreeNode<K,V>)next, pred = prev;
          
+         /**
+          * 如果pred为null，说明当前的节点为tab[index]的第一个节点，也就是root节点。
+          * 如果不是，则pred.next = succ，现在链表中删除当前的节点
+          * */
          if (pred == null)
              tab[index] = first = succ;
          else
              pred.next = succ;
-         
          if (succ != null)
              succ.prev = pred;
          
+         // 如果first为null的情况下，这个链表或者root已经为null，直接的返回了
          if (first == null)
              return;
          
          if (root.parent != null)
              root = root.root();
          
-         if (root == null
-             || (movable
-                 && (root.right == null
-                     || (rl = root.left) == null
-                     || rl.left == null))) {
+         if (root == null || (movable&& (root.right == null|| (rl = root.left) == null || rl.left == null))) {
+        	 	 // 由树转化为链表的数据结构
              tab[index] = first.untreeify(map);  // too small
              return;
          }
          
          TreeNode<K,V> p = this, pl = left, pr = right, replacement;
+         
+         /**
+          * 需要寻找替代的节点，删除节点的过程就是，让原有的节点替换掉现在的节点即可
+          * 如果是叶子节点，即是：pr==null && pl == null  replacement就是p
+          * 如果是左节点或者右节点不为null，但是有一个为null，即是：pr==null&&pl != null || pl == null && pr != null replacement就是p的不空的那个孩子
+          * 
+          * 如果左右节点均不为null，即是：pl != null && pr != null 替换节点首先确定是右子树的的最左孩子，
+          * 可以保证该孩子在右子树中最小
+          * 
+          * */
+         /////// /////// /////// /////// 寻找 replacement 元素 begine  /////// /////// /////// ///////
          if (pl != null && pr != null) {
              TreeNode<K,V> s = pr, sl;
-             while ((sl = s.left) != null) // find successor
+             while ((sl = s.left) != null) // find successor 继任者
                  s = sl;
              boolean c = s.red; s.red = p.red; p.red = c; // swap colors
+             
              TreeNode<K,V> sr = s.right;
              TreeNode<K,V> pp = p.parent;
              if (s == pr) { // p was s's direct parent
+            	 	//s==pr 说ming pr没有左节点，可能存在右节点，然后直接的交换位置
                  p.parent = s;
                  s.right = p;
-             }
-             else {
+             }else {
+            	 	// 此时的else逻辑下：
+            	  // s存在左节点,把对应的s和p节点互换位置，
+            	 // 设置p对应的parent，对应的子节点，
+            	 // 设置s对应的右节点，对应的父节点
                  TreeNode<K,V> sp = s.parent;
                  if ((p.parent = sp) != null) {
                      if (s == sp.left)
@@ -507,8 +538,12 @@ public class MyMap<K,V> {
                  }
                  if ((s.right = pr) != null)
                      pr.parent = s;
+                 
              }
+             
+             //此时的p的位置为原来S的位置，left设置为null，属于正常的操作
              p.left = null;
+             
              if ((p.right = sr) != null)
                  sr.parent = p;
              if ((s.left = pl) != null)
@@ -519,6 +554,8 @@ public class MyMap<K,V> {
                  pp.left = s;
              else
                  pp.right = s;
+             
+             // 没有看明白
              if (sr != null)
                  replacement = sr;
              else
@@ -530,6 +567,10 @@ public class MyMap<K,V> {
              replacement = pr;
          else
              replacement = p;
+         
+         /////// /////// /////// /////// 寻找 replacement 元素 end  /////// /////// /////// ///////
+         
+         // 如果replace不等于p，下面的逻辑就是：使用replace元素替换p元素的过程
          if (replacement != p) {
              TreeNode<K,V> pp = replacement.parent = p.parent;
              if (pp == null)
@@ -538,11 +579,14 @@ public class MyMap<K,V> {
                  pp.left = replacement;
              else
                  pp.right = replacement;
+             
+             // 全部值null
              p.left = p.right = p.parent = null;
          }
 
          TreeNode<K,V> r = p.red ? root : balanceDeletion(root, replacement);
-
+         
+         // 如果替代品，或者说可以删除着为p，说明p为叶子节点，那么只需要设置p.parent 以pp的指向即可
          if (replacement == p) {  // detach
              TreeNode<K,V> pp = p.parent;
              p.parent = null;
@@ -557,7 +601,16 @@ public class MyMap<K,V> {
              moveRootToFront(tab, r);
      }
 
-     /**
+    private void print(int i) {
+    List<TreeNode> queue = new ArrayList<TreeNode>();
+    queue.add(this);
+    while(!queue.isEmpty()) {
+    	
+    }
+			
+		}
+
+		/**
       * Splits nodes in a tree bin into lower and upper tree bins,
       * or untreeifies if now too small. Called only from resize;
       * see above discussion about split bits and indices.
@@ -771,8 +824,10 @@ public class MyMap<K,V> {
          }
      }
 
-     static <K,V> TreeNode<K,V> balanceDeletion(TreeNode<K,V> root,
-                                                TreeNode<K,V> x) {
+     /**
+      * 删除之后的平衡操作
+      * */
+     static <K,V> TreeNode<K,V> balanceDeletion(TreeNode<K,V> root,TreeNode<K,V> x) {
          for (TreeNode<K,V> xp, xpl, xpr;;) {
              if (x == null || x == root)
                  return root;
@@ -989,7 +1044,7 @@ public class MyMap<K,V> {
        ++modCount;
        if (++size > threshold)
            resize();
-//       afterNodeInsertion(evict);
+       afterNodeInsertion(evict);
        return null;
    }
 
@@ -1167,7 +1222,16 @@ public class MyMap<K,V> {
 		}
 		System.out.println(mymap.table.length);
 		
-		mymap.remove("k0");
+		mymap.remove("k5");
+		
+		for (int i = 15; i < 20; i++) {
+			if(i == 16) {
+				mymap.remove("k"+i);
+			}else {
+				mymap.remove("k"+i);
+			}
+			
+		}
 	}
 
 }
