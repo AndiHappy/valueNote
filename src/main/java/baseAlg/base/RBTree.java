@@ -81,22 +81,32 @@ public class RBTree<T extends Comparable<T>> {
 	 * @return the value contain in the removed node
 	 */
 	public T remove(T value){
+		
 		RBTreeNode<T> dataRoot = getRoot();
 		RBTreeNode<T> parent = root;
 		
 		while(dataRoot!=null){
+			
 			int cmp = dataRoot.getValue().compareTo(value);
+			
 			if(cmp<0){
 				parent = dataRoot;
 				dataRoot = dataRoot.getRight();
+			
 			}else if(cmp>0){
+			
 				parent = dataRoot;
 				dataRoot = dataRoot.getLeft();
+			
 			}else{
+				// find data and parent Node
+				
 				if(dataRoot.getRight()!=null){
+					// 右子树的最左节点 拆分出来，不在树上了
 					RBTreeNode<T> min = removeMin(dataRoot.getRight());
 					//x used for fix color balance
 					RBTreeNode<T> x = min.getRight()==null ? min.getParent() : min.getRight();
+					
 					boolean isParent = min.getRight()==null;
 							
 					min.setLeft(dataRoot.getLeft());
@@ -148,6 +158,7 @@ public class RBTree<T extends Comparable<T>> {
 					getRoot().setRed(false);
 					getRoot().setParent(null);
 				}
+				
 				size.decrementAndGet();
 				return dataRoot.getValue();
 			}

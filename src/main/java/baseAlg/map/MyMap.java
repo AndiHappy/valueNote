@@ -500,6 +500,7 @@ public class MyMap<K,V> {
              return;
          }
          
+         // p指向待删除的节点，replacement存放等待替换的接待点
          TreeNode<K,V> p = this, pl = left, pr = right, replacement;
          
          /**
@@ -514,6 +515,7 @@ public class MyMap<K,V> {
          /////// /////// /////// /////// 寻找 replacement 元素 begine  /////// /////// /////// ///////
          if (pl != null && pr != null) {
              TreeNode<K,V> s = pr, sl;
+             // 寻找右子树最左叶子节点作为后继
              while ((sl = s.left) != null) // find successor 继任者
                  s = sl;
              boolean c = s.red; s.red = p.red; p.red = c; // swap colors
@@ -521,14 +523,29 @@ public class MyMap<K,V> {
              TreeNode<K,V> sr = s.right;
              TreeNode<K,V> pp = p.parent;
              if (s == pr) { // p was s's direct parent
-            	 	//s==pr 说ming pr没有左节点，可能存在右节点，然后直接的交换位置
+/* 
+            	 p
+            	/  \
+             pl   pr(s)
+*/
+            	 	//s==pr 如果后继就是右儿子（说明右子树只有一个节点）说明 pr没有左节点，pr不为null，所以只存在一个右子树只有一个：pr
                  p.parent = s;
                  s.right = p;
              }else {
-            	 	// 此时的else逻辑下：
-            	  // s存在左节点,把对应的s和p节点互换位置，
-            	 // 设置p对应的parent，对应的子节点，
-            	 // 设置s对应的右节点，对应的父节点
+/* 
+            	 p
+            	/  \
+             pl   pr(sp)
+                 /   \
+               sl(s)    sr
+               
+               	5
+							 /  \
+							4    7
+							    / \
+							   6   8
+*/          
+            	  // 此时的else逻辑下：右子树存在左节点,把对应的s和p节点互换位置，
                  TreeNode<K,V> sp = s.parent;
                  if ((p.parent = sp) != null) {
                      if (s == sp.left)
@@ -539,34 +556,53 @@ public class MyMap<K,V> {
                  if ((s.right = pr) != null)
                      pr.parent = s;
                  
+/* 
+              	 s
+              	/  \
+               pl   pr(sp)
+                   /   \
+                 p    sr
+                 
+                  6
+								 /  \
+								4    7
+								    / \
+								   5   8
+                 
+  */
              }
              
              //此时的p的位置为原来S的位置，left设置为null，属于正常的操作
              p.left = null;
              
              if ((p.right = sr) != null)
-                 sr.parent = p;
+                 sr.parent = p; // s原本的右子树成为p的右子树
              if ((s.left = pl) != null)
-                 pl.parent = s;
+                 pl.parent = s; // s原本的左子树成为p的左子树
              if ((s.parent = pp) == null)
-                 root = s;
+                 root = s; //若p原本是根则新的根是s
              else if (p == pp.left)
-                 pp.left = s;
+                 pp.left = s; //若p是某个结点的左儿子，则s成为该结点的左儿子
              else
-                 pp.right = s;
+                 pp.right = s; //若p是某个结点的右儿子，则s成为该结点的右儿子
              
-             // 没有看明白
+             //  前面的这些只是实现了s和p的元素的互换，后面的这个才是确定替换节点的节奏，如果
+             //  s为叶子页面那么，替换的节点就是P节点自身了，因为s和p替换以后，p也为了叶子节点了。如果
+             //  s不为叶子节点，已知的情况下，s不含有左节点，所以只能是右节点或者右子树，交换以后，p也有右孩子或者右子树，替换节点就是第一个p的第一个右节点，也就是原来的s的右节点
+             ////若s结点有右儿子（s一定没有左儿子,因为s为右子树的最左孩子，已经没有左孩子)
+             
              if (sr != null)
                  replacement = sr;
              else
                  replacement = p;
          }
+         
          else if (pl != null)
-             replacement = pl;
+             replacement = pl;//右孩子为null左孩子不为null
          else if (pr != null)
-             replacement = pr;
+             replacement = pr;//左孩子为null右孩子不为null
          else
-             replacement = p;
+             replacement = p;//左右均为null
          
          /////// /////// /////// /////// 寻找 replacement 元素 end  /////// /////// /////// ///////
          
