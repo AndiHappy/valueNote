@@ -13,7 +13,6 @@ public class BasicIoDesignPattern implements Runnable {
 	public void run() {
     try {
         ServerSocket ss = new ServerSocket(PORT);
-//        ss.setSoTimeout(timeout);
         while (!Thread.interrupted())
         new Thread(new Handler(ss.accept())).start(); //创建新线程来handle
         // or, single-threaded, or a thread pool
