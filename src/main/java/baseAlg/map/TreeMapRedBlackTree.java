@@ -148,14 +148,24 @@ public class TreeMapRedBlackTree<K> implements Cloneable, java.io.Serializable {
         p.left = p.right = p.parent = null;
 
         // Fix replacement
-        if (p.color == BLACK)
-            fixAfterDeletion(replacement);
+        if (p.color == BLACK) {
+        	 fixAfterDeletion(replacement);
+        }else {
+        	System.out.println("del red");
+        }
+           
     } else if (p.parent == null) { // return if we are the only node.
         root = null;
     } else { //  No children. Use self as phantom replacement and unlink.
-        if (p.color == BLACK)
-            fixAfterDeletion(p);
+    	  // replacement 为null的情况下，
+        if (p.color == BLACK) {
+        	fixAfterDeletion(p);
+        }else {
+        	System.out.println("del red");
+        }
+            
 
+        //直接的删除了p 说明这个时候p已经是叶子节点
         if (p.parent != null) {
             if (p == p.parent.left)
                 p.parent.left = null;
@@ -215,28 +225,29 @@ public class TreeMapRedBlackTree<K> implements Cloneable, java.io.Serializable {
 					x = root;
 				}
 			} else { // symmetric
-				Node sib = leftOf(parentOf(x));
+				assert x == rightOf((parentOf(x)));
+				Node brother = leftOf(parentOf(x));
 
-				if (colorOf(sib) == RED) {
-					setColor(sib, BLACK);
+				if (colorOf(brother) == RED) {
+					setColor(brother, BLACK);
 					setColor(parentOf(x), RED);
 					rotateRight(parentOf(x));
-					sib = leftOf(parentOf(x));
+					brother = leftOf(parentOf(x));
 				}
 
-				if (colorOf(rightOf(sib)) == BLACK && colorOf(leftOf(sib)) == BLACK) {
-					setColor(sib, RED);
+				if (colorOf(rightOf(brother)) == BLACK && colorOf(leftOf(brother)) == BLACK) {
+					setColor(brother, RED);
 					x = parentOf(x);
 				} else {
-					if (colorOf(leftOf(sib)) == BLACK) {
-						setColor(rightOf(sib), BLACK);
-						setColor(sib, RED);
-						rotateLeft(sib);
-						sib = leftOf(parentOf(x));
+					if (colorOf(leftOf(brother)) == BLACK) {
+						setColor(rightOf(brother), BLACK);
+						setColor(brother, RED);
+						rotateLeft(brother);
+						brother = leftOf(parentOf(x));
 					}
-					setColor(sib, colorOf(parentOf(x)));
+					setColor(brother, colorOf(parentOf(x)));
 					setColor(parentOf(x), BLACK);
-					setColor(leftOf(sib), BLACK);
+					setColor(leftOf(brother), BLACK);
 					rotateRight(parentOf(x));
 					x = root;
 				}
@@ -248,28 +259,42 @@ public class TreeMapRedBlackTree<K> implements Cloneable, java.io.Serializable {
 
 	private void fixAfterInsertion(Node x) {
 		x.color = RED;
+		// x 为null，x为root的第一个节点，直接的跳走
+		/**
+		 * 如果x parent 节点为黑，那么x 为红，直接的跳过即可。
+		 * */
 		while (x != null && x != root && x.parent.color == RED) {
 			if (parentOf(x) == leftOf(parentOf(parentOf(x)))) {
 				Node uncle = rightOf(parentOf(parentOf(x)));
 				if (colorOf(uncle) == RED) {
+					// 图三
 					setColor(parentOf(x), BLACK);
 					setColor(uncle, BLACK);
 					setColor(parentOf(parentOf(x)), RED);
 					x = parentOf(parentOf(x));
 				} else {
+					// uncle 节点为黑或者uncle 节点为null
 					if (x == rightOf(parentOf(x))) {
 						x = parentOf(x);
+						/**
+						 * 这个操作，非常的有意思，按照左旋方法的定义，参数应该是旋转子树的根节点，但是这个传入的是旋转节点
+						 * 然后，就变成了：x右节点和x交换位置，并且在交换位置的过程中，x有右节点变为了左节点。
+						 * 图②
+						 * */
 						rotateLeft(x);
 					}
+					// 调整颜色，当前节点为红色节点，是定死的。所以把父节点设为黑，爷节节点设置为红
 					setColor(parentOf(x), BLACK);
 					setColor(parentOf(parentOf(x)), RED);
+					// x 为left节点，进行右旋
+					// 图①
 					rotateRight(parentOf(parentOf(x)));
 				}
 			} else {
-				Node y = leftOf(parentOf(parentOf(x)));
-				if (colorOf(y) == RED) {
+				Node uncle = leftOf(parentOf(parentOf(x)));
+				if (colorOf(uncle) == RED) {
 					setColor(parentOf(x), BLACK);
-					setColor(y, BLACK);
+					setColor(uncle, BLACK);
 					setColor(parentOf(parentOf(x)), RED);
 					x = parentOf(parentOf(x));
 				} else {
@@ -286,13 +311,19 @@ public class TreeMapRedBlackTree<K> implements Cloneable, java.io.Serializable {
 		root.color = BLACK;
 	}
 
-	/** From CLR */
+	/** From CLR 
+	 *  旋转节点：为 p.right
+	 *  方法的输入的参数为 旋转子树的节点
+	 * */
 	private void rotateLeft(Node p) {
 		if (p != null) {
+			// p的右节点即是旋转上升的节点，然后旋转上升后，该节点的左节点为P，原来的左节点，这是为p的右节点
 			Node r = p.right;
 			p.right = r.left;
 			if (r.left != null)
 				r.left.parent = p;
+			
+			// 设置循转节点的父节点，以及P原来父节点的指向的设置
 			r.parent = p.parent;
 			if (p.parent == null)
 				root = r;
@@ -300,18 +331,25 @@ public class TreeMapRedBlackTree<K> implements Cloneable, java.io.Serializable {
 				p.parent.left = r;
 			else
 				p.parent.right = r;
+			
+			//旋转节点为右节点，原来的左孩子设置为P
 			r.left = p;
 			p.parent = r;
 		}
 	}
 
-	/** From CLR */
+	/** From CLR 
+	 * 该方法的参数，并不是被旋转的节点，而是调整子树的根节点
+	 * */
 	private void rotateRight(Node p) {
 		if (p != null) {
+			// p的左节点设置为 原来左节点的右子树
 			Node l = p.left;
 			p.left = l.right;
 			if (l.right != null)
 				l.right.parent = p;
+			
+			// 旋转过程中父节点的设置，上升节点的父节点以及原来父节点的指向的设置
 			l.parent = p.parent;
 			if (p.parent == null)
 				root = l;
@@ -319,6 +357,8 @@ public class TreeMapRedBlackTree<K> implements Cloneable, java.io.Serializable {
 				p.parent.right = l;
 			else
 				p.parent.left = l;
+			
+			// 最后右节点和p旋转后父节点的设置
 			l.right = p;
 			p.parent = l;
 		}
@@ -387,11 +427,30 @@ public class TreeMapRedBlackTree<K> implements Cloneable, java.io.Serializable {
 	public static void main(String[] args) {
 		
 			TreeMapRedBlackTree<Integer> tree = new TreeMapRedBlackTree<Integer>();
-			for (int i = 0; i < 15; i++) {
+			
+//		tree.put(15);
+//		
+//		tree.put(10);
+//		
+//		tree.put(12);
+//		
+//		tree.put(9);
+			
+			/**
+			 * 从大到小的构建，即可调试：从左子树开始构建
+			 * */
+			for (int i = 15; i >=0; i--) {
 				tree.put(i);
 			}
 			
-			tree.remove(5);
+			/**
+			 * 从小到大的构建，即可调试：从右子树开始构建
+			 * */
+//			for (int i = 0; i < 15; i++) {
+//				tree.put(i);
+//			}
+			
+			tree.remove(3);
 
 	}
 
