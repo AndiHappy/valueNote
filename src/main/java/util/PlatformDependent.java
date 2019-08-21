@@ -299,8 +299,12 @@ public final class PlatformDependent {
     }
 
     static <T> AtomicIntegerFieldUpdater<T> newAtomicIntegerFieldUpdater(
-            Class<?> tclass, String fieldName) throws Exception {
-        return new UnsafeAtomicIntegerFieldUpdater<T>(UNSAFE, tclass, fieldName);
+            Class<?> tclass, String fieldName) {
+        try {
+					return new UnsafeAtomicIntegerFieldUpdater<T>(UNSAFE, tclass, fieldName);
+				} catch (Exception e) {
+					throw new IllegalAccessError("No such method");
+				}
     }
 
     static <T> AtomicLongFieldUpdater<T> newAtomicLongFieldUpdater(
@@ -381,7 +385,7 @@ final class Cleaner0 {
               cleaner.clean();
               fieldOffset = PlatformDependent.objectFieldOffset(cleanerField);
           } catch (Throwable t) {
-              // We don't have ByteBuffer.cleaner().
+              // We don't have ByteBufferTest.cleaner().
               fieldOffset = -1;
           }
       }

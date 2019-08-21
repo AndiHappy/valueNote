@@ -16,9 +16,9 @@ public class PlatformDependentTest {
 
 For this reason, the notion of a direct buffer was introduced. Direct buffers are intended for interaction with channels and native I/O routines. They make a best effort to store the byte elements in a memory area that a channel can use for direct, or raw, access by using native code to tell the operating system to drain or fill the memory area directly.
 
-Direct byte buffers are usually the best choice for I/O operations. By design, they support the most efficient I/O mechanism available to the JVM. Nondirect byte buffers can be passed to channels, but doing so may incur a performance penalty. It's usually not possible for a nondirect buffer to be the target of a native I/O operation. If you pass a nondirect ByteBuffer object to a channel for write, the channel may implicitly do the following on each call:
+Direct byte buffers are usually the best choice for I/O operations. By design, they support the most efficient I/O mechanism available to the JVM. Nondirect byte buffers can be passed to channels, but doing so may incur a performance penalty. It's usually not possible for a nondirect buffer to be the target of a native I/O operation. If you pass a nondirect ByteBufferTest object to a channel for write, the channel may implicitly do the following on each call:
 
-Create a temporary direct ByteBuffer object.
+Create a temporary direct ByteBufferTest object.
 Copy the content of the nondirect buffer to the temporary buffer.
 Perform the low-level I/O operation using the temporary buffer.
 The temporary buffer object goes out of scope and is eventually garbage collected.
@@ -32,7 +32,7 @@ The performance tradeoffs of using direct versus nondirect buffers can vary wide
 	
 	
 	/**
-	I don't like that quote because it contains too much guessing. Also, the JVM certainly does not need to allocate a direct ByteBuffer when doing IO for a non direct ByteBuffer: it's sufficient to malloc a sequence of bytes on the heap, do the IO, copy from the bytes to the ByteBuffer and release the bytes. Those areas could even be cached. But it is totally unnecessary to allocate a Java object for this. Real answers will only be obtained from measuring. Last time I did measurements there was no significant difference. I would have to redo tests to come up with all the specific details. – Robert Klemme  
+	I don't like that quote because it contains too much guessing. Also, the JVM certainly does not need to allocate a direct ByteBufferTest when doing IO for a non direct ByteBufferTest: it's sufficient to malloc a sequence of bytes on the heap, do the IO, copy from the bytes to the ByteBufferTest and release the bytes. Those areas could even be cached. But it is totally unnecessary to allocate a Java object for this. Real answers will only be obtained from measuring. Last time I did measurements there was no significant difference. I would have to redo tests to come up with all the specific details. – Robert Klemme  
 	 * */
 
 	/**

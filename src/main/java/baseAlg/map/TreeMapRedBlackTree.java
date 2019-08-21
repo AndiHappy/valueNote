@@ -64,7 +64,6 @@ public class TreeMapRedBlackTree<K> implements Cloneable, java.io.Serializable {
 	public int put(K key) {
 		Node t = root;
 		if (t == null) {
-			compare(key, key); // type (and possibly null) check
 			root = new Node(key, null);
 			size = 1;
 			modCount++;
@@ -121,11 +120,10 @@ public class TreeMapRedBlackTree<K> implements Cloneable, java.io.Serializable {
 	private void deleteNode(TreeMapRedBlackTree<K>.Node p) {
 		modCount++;
     size--;
-
     // If strictly internal, copy successor's element to p and then make p
     // point to successor.
     if (p.left != null && p.right != null) {
-    	 // 右子树最左节点
+    	 // p的右子树最左节点，如果右子树没有左节点，就是右子树
         Node s = successor(p);
         p.key = s.key;
         p = s;
@@ -143,15 +141,11 @@ public class TreeMapRedBlackTree<K> implements Cloneable, java.io.Serializable {
             p.parent.left  = replacement;
         else
             p.parent.right = replacement;
-
         // Null out links so they are OK to use by fixAfterDeletion.
         p.left = p.right = p.parent = null;
-
         // Fix replacement
         if (p.color == BLACK) {
         	 fixAfterDeletion(replacement);
-        }else {
-        	System.out.println("del red");
         }
            
     } else if (p.parent == null) { // return if we are the only node.
@@ -160,11 +154,7 @@ public class TreeMapRedBlackTree<K> implements Cloneable, java.io.Serializable {
     	  // replacement 为null的情况下，
         if (p.color == BLACK) {
         	fixAfterDeletion(p);
-        }else {
-        	System.out.println("del red");
         }
-            
-
         //直接的删除了p 说明这个时候p已经是叶子节点
         if (p.parent != null) {
             if (p == p.parent.left)
@@ -199,28 +189,28 @@ public class TreeMapRedBlackTree<K> implements Cloneable, java.io.Serializable {
 	private void fixAfterDeletion(Node x) {
 		while (x != root && colorOf(x) == BLACK) {
 			if (x == leftOf(parentOf(x))) {
-				Node sib = rightOf(parentOf(x));
+				Node uncle = rightOf(parentOf(x));
 
-				if (colorOf(sib) == RED) {
-					setColor(sib, BLACK);
+				if (colorOf(uncle) == RED) {
+					setColor(uncle, BLACK);
 					setColor(parentOf(x), RED);
 					rotateLeft(parentOf(x));
-					sib = rightOf(parentOf(x));
+					uncle = rightOf(parentOf(x));
 				}
 
-				if (colorOf(leftOf(sib)) == BLACK && colorOf(rightOf(sib)) == BLACK) {
-					setColor(sib, RED);
+				if (colorOf(leftOf(uncle)) == BLACK && colorOf(rightOf(uncle)) == BLACK) {
+					setColor(uncle, RED);
 					x = parentOf(x);
 				} else {
-					if (colorOf(rightOf(sib)) == BLACK) {
-						setColor(leftOf(sib), BLACK);
-						setColor(sib, RED);
-						rotateRight(sib);
-						sib = rightOf(parentOf(x));
+					if (colorOf(rightOf(uncle)) == BLACK) {
+						setColor(leftOf(uncle), BLACK);
+						setColor(uncle, RED);
+						rotateRight(uncle);
+						uncle = rightOf(parentOf(x));
 					}
-					setColor(sib, colorOf(parentOf(x)));
+					setColor(uncle, colorOf(parentOf(x)));
 					setColor(parentOf(x), BLACK);
-					setColor(rightOf(sib), BLACK);
+					setColor(rightOf(uncle), BLACK);
 					rotateLeft(parentOf(x));
 					x = root;
 				}
@@ -428,11 +418,11 @@ public class TreeMapRedBlackTree<K> implements Cloneable, java.io.Serializable {
 		
 			TreeMapRedBlackTree<Integer> tree = new TreeMapRedBlackTree<Integer>();
 			
-//		tree.put(15);
-//		
-//		tree.put(10);
-//		
-//		tree.put(12);
+		tree.put(15);
+		
+		tree.put(10);
+		
+		tree.put(17);
 //		
 //		tree.put(9);
 			

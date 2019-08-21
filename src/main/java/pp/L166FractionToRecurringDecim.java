@@ -1,3 +1,4 @@
+package pp;
 import java.util.HashMap;
 
 public class L166FractionToRecurringDecim {
