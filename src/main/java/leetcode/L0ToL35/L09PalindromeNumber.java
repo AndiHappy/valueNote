@@ -41,7 +41,7 @@ public class L09PalindromeNumber {
 			return false;
 		}
 		int sum = num;
-		int temp = 0;
+		long temp = 0;
 		while (sum != 0) {
 			temp = temp * 10 + sum % 10;
 			sum = sum / 10;
@@ -59,4 +59,5 @@ public class L09PalindromeNumber {
 		return temp == num;
 	}
 
+	
 }

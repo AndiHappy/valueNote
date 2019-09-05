@@ -1,4 +1,5 @@
 package leetcode.L0ToL35;
+import java.util.Arrays;
 /*
  * NOTE: 
  * 字符的算法有一个特定的隐藏的条件，总数为256个
@@ -28,6 +29,23 @@ public class L03LongestSubstringWithoutRepeatingCharacters {
 		System.out.println(chars.lengthOfLongestSubstring("abba") + " 2");
 		System.out.println(chars.lengthOfLongestSubstring3("abcabcbbpo")+ " 3");
 		System.out.println(chars.lengthOfLongestSubstring("abcabcbbpo")+ " 3");
+
+	}
+	
+	public int longestNoReapteaed(String v) {
+		int[] fullchar = new int[256];
+		Arrays.fill(fullchar, -1);
+		char[] tmp = v.toCharArray();
+		int curf = 0;
+		int res = 0;
+		for (int i = 0; i < tmp.length; i++) {
+			if (fullchar[tmp[i] - 'a'] != -1) {
+				curf = Math.max(fullchar[tmp[i] - 'a'], curf);
+			}
+				res = Math.max(res, i - curf + 1);
+				fullchar[tmp[i] - 'a'] = i;
+		}
+		return res;
 
 	}
 

@@ -60,6 +60,27 @@ public class L08StringToInteger {
 //		System.out.println(Integer.parseInt("234234325325325235252"));
 
 	}
+	
+	
+	public int myAtoi_copy(String str) {
+		if (str.isEmpty())
+			return 0;
+		str = str.trim();
+		int i = 0, ans = 0, sign = 1, len = str.length();
+		if (str.charAt(i) == '-' || str.charAt(i) == '+')
+			sign = str.charAt(i++) == '+' ? 1 : -1;
+		for (; i < len; ++i) {
+			int tmp = str.charAt(i) - '0';
+			if (tmp < 0 || tmp > 9)
+				break;
+			if (ans > Integer.MAX_VALUE / 10
+					|| (ans == Integer.MAX_VALUE / 10 && Integer.MAX_VALUE % 10 < tmp))
+				return sign == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+			else
+				ans = ans * 10 + tmp;
+		}
+		return sign * ans;
+	}
 
 	public int myAtoi(String str) {
 		//异常情况判断
@@ -83,7 +104,10 @@ public class L08StringToInteger {
 				continue;
 			}
       if (temp >= '0' && temp <= '9') {
-				value = Character.digit(str.charAt(i), 10) + value * 10;
+
+      	int ctmp = Character.digit(str.charAt(i), 10);
+				value = ctmp + value * 10;
+				
 				if (fh * value > Integer.MAX_VALUE) {
 					return Integer.MAX_VALUE;
 				}

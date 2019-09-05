@@ -27,6 +27,27 @@ All given inputs are in lowercase letters a-z.
  * 
  */
 public class L14LongestCommonPrefix {
+	
+	public String longestCommonPrefix_copy(String[] strs) {
+		if(strs == null || strs.length == 0) return "";
+		if(strs.length == 1) return strs[0];
+		int from = 0;boolean flag = true;
+		int end = strs[0].length();
+		String tmp = strs[0];
+		for(;from < end && flag;from++) {
+			for(int j = 1;j<strs.length;j++) {
+				if(from >= strs[j].length() || strs[j].charAt(from) != tmp.charAt(from)) {
+					flag=false;
+					from = from-1;
+					break;
+				}
+			}
+		}
+		
+		return tmp.substring(0, from);
+		
+	}
+	
 
 	public String longestCommonPrefix(String[] strs) {
 		
@@ -59,7 +80,10 @@ public class L14LongestCommonPrefix {
 
 	public static void main(String[] args) {
 		L14LongestCommonPrefix fix = new L14LongestCommonPrefix();
-		fix.longestCommonPrefix(new String[] { "a", "a", "b" });
+		System.out.println(fix.longestCommonPrefix_copy(new String[] { "a", "a"}));
+		System.out.println(fix.longestCommonPrefix_copy(new String[] { "a", "a","c"}));
+		System.out.println(fix.longestCommonPrefix_copy(new String[] { "", ""}));
+
 	}
 
 }

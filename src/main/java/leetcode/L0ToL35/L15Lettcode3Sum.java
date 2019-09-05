@@ -28,25 +28,29 @@ public class L15Lettcode3Sum {
 	// (-1, -1, 2)
 	//
 	/***
-	 *
+	 * 关键在于nums的先排序
+	 * 然后两头堵的方式，from =0，end = length-1 ， 中间的sum = sumvalue- (from+end)
+	 * 循环的条件是先确定匹配值i（0 到 length-1），然后去（i+1，i+2，。。。length-1 中寻找from 和 end）
 	 */
-	public List<List<Integer>> threeSum(int[] nums) {
+public List<List<Integer>> threeSum(int[] nums) {
 		List<List<Integer>> res = new ArrayList<List<Integer>>();
 		Arrays.sort(nums);
 		for (int i = 0; i < nums.length - 2; i++) {
+			
 			if (i == 0 || (i > 0 && nums[i] != nums[i - 1])) {
 				int from = i + 1;
 				int end = nums.length - 1;
 				int sumt = 0 - nums[i];
 				while (from < end) {
-					// 
 					int temp = nums[from] + nums[end];
 					if (sumt == temp) {
 						res.add(Arrays.asList(nums[i], nums[from], nums[end]));
+						
 						while (from < end && from + 1 < nums.length && nums[from] == nums[from + 1])
 							from++;
 						while (from < end && end + 1 < nums.length && nums[end] == nums[end + 1])
 							end--;
+						
 						from++;
 						end--;
 					} else if (sumt < temp) {
@@ -126,7 +130,7 @@ public class L15Lettcode3Sum {
 
 	public static void main(String[] args) {
 		L15Lettcode3Sum sm = new L15Lettcode3Sum();
-		int[] nums = new int[] {4,3,2,5,6,0 };
+		int[] nums = new int[] {4,3,2,5,6,0,-4,-5,-4,-5};
 //		System.out.println(sm.quickindex(nums, 0, nums.length-1));
 		System.out.println(Arrays.toString((sm.quikSort(nums))));
 		List<List<Integer>> res = sm.threeSum(nums);

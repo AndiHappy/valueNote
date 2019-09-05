@@ -25,7 +25,38 @@ The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
 
  * 
  */
+
+
+
 public class L16Lettcode3SumCloest {
+	
+	public int threeSumClosest_copy(int[] num,int target) {
+		int result = num[0]+num[1]+num[num.length-1];
+		Arrays.parallelSort(num);
+		int small = num[0]+num[1]+num[2];
+		if(small >= target) return small;
+		int big = num[num.length-3]+num[num.length-2]+num[num.length-1];
+		if(big <= target) return big;
+		
+		for (int i = 0; i < num.length - 2; i++) {
+      int start = i + 1, end = num.length - 1;
+      while (start < end) {
+          int sum = num[i] + num[start] + num[end];
+          if (sum > target) {
+              end--;
+          } else {
+              start++;
+          }
+          if (Math.abs(sum - target) < Math.abs(result - target)) {
+              result = sum;
+          }
+      }
+  }
+  return result;
+	}
+	
+	
+	
 
     public int threeSumClosest(int[] num, int target) {
         int result = num[0] + num[1] + num[num.length - 1];

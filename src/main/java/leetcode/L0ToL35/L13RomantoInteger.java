@@ -41,5 +41,5 @@ public class L13RomantoInteger {
 	            pivot = curr;
 	        }
 	        return result;
-	    }
+	}
 }

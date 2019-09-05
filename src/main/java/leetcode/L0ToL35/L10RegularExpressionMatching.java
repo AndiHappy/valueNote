@@ -103,16 +103,18 @@ public class L10RegularExpressionMatching {
 		//初始化第0行,除了[0][0]全为false，毋庸置疑，因为空串p只能匹配空串，其他都无能匹配
 		for (int i = 1; i <= m; i++)
 			dp[i][0] = false;
+		
 		//初始化第0列，只有X*能匹配空串，如果有*，它的真值一定和p[0][j-2]的相同（略过它之前的符号）
-		for (int j = 1; j <= n; j++)
+		for (int j = 1; j <= n; j++) {
 			dp[0][j] = j > 1 && '*' == p.charAt(j - 1) && dp[0][j - 2];
+		}
+			
 
 		for (int i = 1; i <= m; i++) {
 			for (int j = 1; j <= n; j++) {
 				//由于表格中是从1开始的，而字符串中是以0开始的，所以i-1和j-1才对应字符串中的字符。
 				if (p.charAt(j - 1) == '*') {
-					dp[i][j] = dp[i][j - 2]
-							|| (s.charAt(i - 1) == p.charAt(j - 2) || p.charAt(j - 2) == '.') && dp[i - 1][j];
+					dp[i][j] = dp[i][j - 2]|| (s.charAt(i - 1) == p.charAt(j - 2) || p.charAt(j - 2) == '.') && dp[i - 1][j];
 
 				} else //只有当前字符完全匹配，才有资格传递dp[i-1][j-1] 真值
 				{
@@ -180,5 +182,37 @@ public class L10RegularExpressionMatching {
 		isMatch("ab", ".*");
 		isMatch("aab", "c*a*b");
 	}
+	
+	public boolean isMatch_copy(String s, String p) {
+    if(s == null || p == null) {
+        return false;
+    }
+    boolean[][] state = new boolean[s.length() + 1][p.length() + 1];
+    state[0][0] = true;
+    // no need to initialize state[i][0] as false
+    // initialize state[0][j]
+    for (int j = 1; j < state[0].length; j++) {
+        if (p.charAt(j - 1) == '*') {
+            if (state[0][j - 1] || (j > 1 && state[0][j - 2])) {
+                state[0][j] = true;
+            }
+        } 
+    }
+    for (int i = 1; i < state.length; i++) {
+        for (int j = 1; j < state[0].length; j++) {
+            if (s.charAt(i - 1) == p.charAt(j - 1) || p.charAt(j - 1) == '.') {
+                state[i][j] = state[i - 1][j - 1];
+            }
+            if (p.charAt(j - 1) == '*') {
+                if (s.charAt(i - 1) != p.charAt(j - 2) && p.charAt(j - 2) != '.') {
+                    state[i][j] = state[i][j - 2];
+                } else {
+                    state[i][j] = state[i - 1][j] || state[i][j - 1] || state[i][j - 2];
+                }
+            }
+        }
+    }
+    return state[s.length()][p.length()];
+}
 
 }
