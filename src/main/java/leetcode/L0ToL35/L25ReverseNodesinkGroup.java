@@ -24,6 +24,27 @@ public class L25ReverseNodesinkGroup {
 		System.out.println(tmp1);
 	}
 
+	public ListNode reverseKGroup_copy(ListNode head, int k) {
+    int n = 0;
+    for (ListNode i = head; i != null; n++, i = i.next);
+    
+    ListNode dmy = new ListNode(0);
+    dmy.next = head;
+//    翻转的实在让人感慨，看着简单，自己去写就是写的没有那么好
+    for(ListNode prev = dmy, tail = head; n >= k; n -= k) {
+    	
+        for (int i = 1; i < k; i++) {
+            ListNode next = tail.next.next;
+            tail.next.next = prev.next;
+            prev.next = tail.next;
+            tail.next = next;
+        }
+        
+        prev = tail;
+        tail = tail.next;
+    }
+    return dmy.next;
+}
 
 
 	public static ListNode reverseKGroup(ListNode head, int k) {

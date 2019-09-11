@@ -15,6 +15,28 @@ public class L21MergeTwoSortedLists {
 		System.out.println(node.toString());
 	}
 
+
+	public ListNode mergeTwoLists_copy(ListNode l1, ListNode l2) {
+		ListNode head = new ListNode(-1);
+		ListNode tmp = head;
+
+		while (l1 != null || l2 != null) {
+			int l1v = l1 != null ? l1.val : Integer.MAX_VALUE;
+			int l2v = l2 != null ? l2.val : Integer.MAX_VALUE;
+			if (l1v < l2v) {
+				tmp.next = new ListNode(l1v);
+				l1 = l1.next;
+			} else {
+				tmp.next = new ListNode(l2v);
+				l2 = l2.next;
+			}
+			tmp = tmp.next;
+		}
+		return head.next;
+	}
+
+
+
 	/**
 	 * very good recursion
 	 * */

@@ -37,25 +37,66 @@ public class L29DivideTwoIntegers {
 	 * 以及这两个边界值的处理，以及绝对值的计算
 	 * */
 	
-	//这种情况会直接的超时
+	
 	public int divide(int dividend, int divisor) {
 		//首先判定符号的问题
 		boolean flag = (dividend > 0 && divisor > 0) || (dividend < 0 && divisor < 0);
-		int dividends = 0;
-		int divisors = 0;
-		if (dividend == Integer.MIN_VALUE)
-			dividend = Integer.MAX_VALUE;
-		if (divisor == Integer.MIN_VALUE)
-			divisor = Integer.MAX_VALUE;
-		dividends = dividend > 0 ? dividend : -dividend;
-		divisors = divisor > 0 ? divisor : -divisor;
-		int res = 0;
-		while (dividends - divisors >= 0) {
-			res++;
+
+		int dividends = dividend > 0 ? -dividend : dividend;
+		int divisors = divisor > 0 ? -divisor : divisor;
+		
+		int res = 0;int curdivisors = divisors;
+		while (dividends <= divisors) {
+			int tmp = 1;
+			while( (divisors << 1 >= dividends) && (divisors << 1) < 0 ) {
+				tmp <<=1;
+				divisors <<=1;
+			}
+			
+			res+=tmp;
 			dividends -= divisors;
+			divisors = curdivisors;
 		}
-		return flag ? res : -res;
+		return flag ? res==Integer.MIN_VALUE?Integer.MAX_VALUE:res : -res;
 	}
+	
+	
+	public int divide_copy(int dividend, int divisor) {
+    if (dividend == Integer.MIN_VALUE && divisor == -1) {
+        return Integer.MAX_VALUE;
+    }
+
+    if (dividend > 0 && divisor > 0) {
+        return divideHelper(-dividend, -divisor);
+    } else if (dividend > 0) {
+        return -divideHelper(-dividend, divisor);
+    }
+    else if(divisor > 0) {
+        return -divideHelper(dividend, -divisor);
+    }
+    else {
+        return divideHelper(dividend, divisor);
+    }
+}
+
+private int divideHelper(int dividend, int divisor){
+    int res = 0;
+    int currentDivisor = divisor;
+    while(dividend<=divisor){    // abs(divisor) <= abs(dividend)
+    	
+        int temp = 1;  
+        //test max temp for: temp * abs(divisor) <= abs(dividend), while temp = 2^n
+        while( (currentDivisor << 1) >=dividend && (currentDivisor << 1) <0 ){  
+            temp <<=1;
+            currentDivisor <<=1;
+        }
+        
+        dividend -= currentDivisor;  
+        res += temp;    
+        currentDivisor = divisor;
+    }       
+    return res;
+}
 
 	//这种情况会直接的超时
 	public int divideStep2(int dividend, int divisor) {
@@ -116,23 +157,25 @@ public class L29DivideTwoIntegers {
 	 */
 	public static void main(String[] args) {
 		
-		System.out.println(Integer.MAX_VALUE);
-		System.out.println(Integer.MIN_VALUE);
+//		System.out.println(Integer.MAX_VALUE);
+//		System.out.println(Integer.MIN_VALUE);
+//		
+//		System.out.println(Math.abs(Integer.MAX_VALUE));
+//		System.out.println(Math.abs(Integer.MIN_VALUE));
+//		
+//		long value = Long.MAX_VALUE;
+//		System.out.println((int)value);
+//		value = Long.MIN_VALUE;
+//		System.out.println((int)value);
 		
-		System.out.println(Math.abs(Integer.MAX_VALUE));
-		System.out.println(Math.abs(Integer.MIN_VALUE));
 		
-		long value = Long.MAX_VALUE;
-		System.out.println((int)value);
-		value = Long.MIN_VALUE;
-		System.out.println((int)value);
-		
-		
-//		L29DivideTwoIntegers test = new L29DivideTwoIntegers();
-//				System.out.println(test.divideStep2(10, 3));
-//				System.out.println(test.divideStep2(-10, 3));
-//				System.out.println(test.divideStep2(-100, -3));
-//		System.out.println(test.divideStep2(-2147483648, -1)); //-2147483648
+		L29DivideTwoIntegers test = new L29DivideTwoIntegers();
+				System.out.println(test.divide(10, 3));
+				System.out.println(test.divide(-10, 3));
+				System.out.println(test.divide(-100, -3));
+				
+		System.out.println(test.divide(-2147483648, 1)); //-2147483648
+		System.out.println(test.divide(-2147483648, -1)); //-2147483648
 
 	}
 

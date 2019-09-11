@@ -41,6 +41,57 @@ public class L23MergekSortedLists {
 		System.out.println(res);
 	}
 
+	
+public static ListNode mergeKLists_best(ListNode[] lists){
+    return partion(lists,0,lists.length-1);
+}
+
+public static ListNode partion(ListNode[] lists,int s,int e){
+    if(s==e)  return lists[s];
+    if(s<e){
+        int q=s+(e-s)/2;
+        ListNode l1=partion(lists,s,q);
+        ListNode l2=partion(lists,q+1,e);
+        return mergeTwoLists(l1,l2);
+    }else
+        return null;
+}
+
+public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+	ListNode head = new ListNode(-1);
+	ListNode tmp = head;
+	while (l1 != null || l2 != null) {
+		int l1v = l1 != null ? l1.val : Integer.MAX_VALUE;
+		int l2v = l2 != null ? l2.val : Integer.MAX_VALUE;
+		if (l1v < l2v) {
+			tmp.next = new ListNode(l1v);
+			l1 = l1.next;
+		} else {
+			tmp.next = new ListNode(l2v);
+			l2 = l2.next;
+		}
+		tmp = tmp.next;
+	}
+	return head.next;
+}
+
+
+
+
+//This function is from Merge Two Sorted Lists.
+public static ListNode merge(ListNode l1,ListNode l2){
+    if(l1==null) return l2;
+    if(l2==null) return l1;
+    if(l1.val<l2.val){
+        l1.next=merge(l1.next,l2);
+        return l1;
+    }else{
+        l2.next=merge(l1,l2.next);
+        return l2;
+    }
+}
+	
+	
 	public ListNode mergeKListsCirclulation(ListNode[] lists) {
 		if (lists == null || lists.length == 0)
 			return null;

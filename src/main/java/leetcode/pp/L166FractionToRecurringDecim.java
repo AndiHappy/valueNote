@@ -1,4 +1,4 @@
-package pp;
+package leetcode.pp;
 import java.util.HashMap;
 
 public class L166FractionToRecurringDecim {

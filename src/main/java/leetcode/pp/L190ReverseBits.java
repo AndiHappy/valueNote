@@ -1,4 +1,4 @@
-package pp;
+package leetcode.pp;
 
 public class L190ReverseBits {
 
