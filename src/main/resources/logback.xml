@@ -11,13 +11,6 @@
 			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n</pattern>
 		</encoder>
 	</appender>
-	
-	
-	<logger name="com.liveme.im.kafka" level="INFO" additivity="false"> 
-		<appender-ref ref="kafka" />
-	</logger> 
-
-
 
 	<!-- 日志输出级别 -->
 	<root level="INFO">
