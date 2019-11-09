@@ -37,7 +37,9 @@ Follow up:
 
 If all integer numbers from the stream are between 0 and 100, how would you optimize it?
 If 99% of all integer numbers from the stream are between 0 and 100, how would you optimize it?
-  */
+
+  需要再次的针对PriorityQueue 进行梳理
+*/
  
  class MedianFinder {
   // max queue is always larger or equal to min queue

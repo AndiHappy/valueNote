@@ -49,7 +49,7 @@ Your serialize and deserialize algorithms should be stateless.
   private static final String spliter = ",";
   private static final String NN = "X";
 
-  // 中序遍历的成序列
+  // 中序遍历的成序列,关键的地方就在于叶子节点表示为X
   public String serialize(TreeNode root) {
       StringBuilder sb = new StringBuilder();
       buildString(root, sb);
