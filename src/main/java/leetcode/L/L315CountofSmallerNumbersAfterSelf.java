@@ -56,6 +56,11 @@ public class L315CountofSmallerNumbersAfterSelf {
    this.index = index;
    this.val = val;
   }
+  @Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "["+index+","+val+"]";
+	}
  }
 
  public List<Integer> countSmaller_merge(int[] nums) {
@@ -73,9 +78,9 @@ public class L315CountofSmallerNumbersAfterSelf {
   }
 
   mergeSort(arr, smaller);
+  System.out.println(Arrays.toString(arr));
 
-  res.addAll(Arrays.asList(smaller));
-  return res;
+  return Arrays.asList(smaller);
  }
 
  /**
@@ -90,6 +95,9 @@ public class L315CountofSmallerNumbersAfterSelf {
   int mid = arr.length / 2;
   Pair[] left = mergeSort(Arrays.copyOfRange(arr, 0, mid), smaller);
   Pair[] right = mergeSort(Arrays.copyOfRange(arr, mid, arr.length), smaller);
+  // 这个时候left和right 均是已经排列好的，我们要保持这一点，就需要排序，这个是比对的排序
+  // 当 left[i].val <= right[j].val  
+  
   for (int i = 0, j = 0; i < left.length || j < right.length;) {
    if (j == right.length || i < left.length && left[i].val <= right[j].val) {
     arr[i + j] = left[i];
@@ -100,6 +108,12 @@ public class L315CountofSmallerNumbersAfterSelf {
     j++;
    }
   }
+  
+  System.out.println(Arrays.toString(left));
+  System.out.println(Arrays.toString(right));
+  System.out.println("smaller:" + Arrays.toString(smaller));
+
+  
   return arr;
  }
 
@@ -107,7 +121,7 @@ public class L315CountofSmallerNumbersAfterSelf {
   L315CountofSmallerNumbersAfterSelf test = new L315CountofSmallerNumbersAfterSelf();
   int[] value = new int[] { 4, 3, 7, 5, 2, 6, 1 };
   System.out.println(Arrays.toString(value));
-  List<Integer> res = test.countSmaller(value);
+  List<Integer> res = test.countSmaller_merge(value);
   System.out.println(Arrays.toString(res.toArray()));
  }
 
